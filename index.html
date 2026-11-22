@@ -544,6 +544,8 @@ h1,h2{font-family:var(--display);font-weight:500;margin:0;letter-spacing:.02em}
 .touch #snd span:first-child{display:none}
 .touch #counter{right:12px;bottom:12px;font-size:11px;letter-spacing:.1em}
 .touch #progress{height:3px}
+#rotbtn{position:absolute;left:50%;bottom:max(10px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);pointer-events:auto;background:rgba(0,0,0,.6);color:var(--bone);border:1px solid rgba(240,231,222,.25);border-radius:999px;font-family:var(--body);font-size:13px;padding:8px 16px;cursor:pointer}
+#rotbtn::before{content:"⟳ "}
 .lite .ch{filter:none!important}
 .lite .grain{display:none}
 .lite #s7 .bar{backdrop-filter:none}
@@ -973,7 +975,7 @@ h1,h2{font-family:var(--display);font-weight:500;margin:0;letter-spacing:.02em}
 </div></div>
 
 <div id="nav"><button class="prev" aria-label="上一頁"></button><button class="next" aria-label="下一頁"></button></div>
-<div id="hud"><div id="progress"></div><div id="hint">← → 換頁 ・ F 全螢幕 ・ M 配樂</div><button id="snd" type="button" aria-pressed="false" aria-label="配樂開關"><span>配樂 關</span><span class="eq"><i></i><i></i><i></i><i></i></span></button><div id="counter">01 / 05</div></div>
+<div id="hud"><div id="progress"></div><div id="hint">← → 換頁 ・ F 全螢幕 ・ M 配樂</div><button id="snd" type="button" aria-pressed="false" aria-label="配樂開關"><span>配樂 關</span><span class="eq"><i></i><i></i><i></i><i></i></span></button><button id="rotbtn" type="button" aria-pressed="false" hidden>旋轉放大</button><div id="counter">01 / 05</div></div>
 </div><!-- /frame -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -984,14 +986,16 @@ const isTouch=matchMedia('(pointer:coarse)').matches||('ontouchstart' in window)
 const root=document.documentElement,frame=document.getElementById('frame');
 if(isTouch)root.classList.add('touch');
 if(isTouch||Math.min(screen.width,screen.height)<900)root.classList.add('lite');
-let ROT=false;
-function fit(){const W=innerWidth,H=innerHeight;ROT=isTouch&&H>W*1.05;
+let ROT=false,rotPref=false;
+try{rotPref=localStorage.getItem('skinora-rot')==='1'}catch(e){}
+function fit(){const W=innerWidth,H=innerHeight;const portrait=isTouch&&H>W*1.05;ROT=portrait&&rotPref;
+  const rb=document.getElementById('rotbtn');if(rb){rb.hidden=!portrait;rb.textContent=ROT?'恢復直式':'旋轉放大';rb.setAttribute('aria-pressed',ROT)}
   const fw=ROT?H:W,fh=ROT?W:H;
   frame.style.width=fw+'px';frame.style.height=fh+'px';
   frame.style.transform=ROT?('translate('+W+'px,0) rotate(90deg)'):'none';
   root.classList.toggle('rot',ROT);
   const s=Math.min(fw/1920,fh/1080);stage.style.transform='translate(-50%,-50%) scale('+s+')';
-  const h=document.getElementById('hint');if(h&&isTouch)h.textContent=ROT?'轉橫向觀看更清楚 ・ 點右側下一頁':'點右側下一頁 ・ 左側上一頁 ・ 左右滑動換頁';}
+  const h=document.getElementById('hint');if(h&&isTouch)h.textContent=ROT?'點畫面上方上一頁 ・ 下方下一頁':(portrait?'可按下方「旋轉放大」・ 或把手機轉橫':'點右側下一頁 ・ 左側上一頁 ・ 左右滑動換頁');}
 addEventListener('resize',fit);fit();
 
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1472,6 +1476,7 @@ addEventListener('keydown',e=>{
   else if(e.key==='Home')go(0);else if(e.key==='End')go(N-1);
   else if(e.key==='f'||e.key==='F'){const el=document.documentElement;if(!document.fullscreenElement){el.requestFullscreen&&el.requestFullscreen().catch(()=>{})}else{document.exitFullscreen().catch(()=>{})}}
 });
+document.getElementById('rotbtn').addEventListener('click',e=>{e.stopPropagation();rotPref=!ROT;try{localStorage.setItem('skinora-rot',rotPref?'1':'0')}catch(err){}fit();const h=document.getElementById('hint');h.style.opacity=1;setTimeout(()=>{h.style.opacity=0},3500)});
 document.getElementById('snd').addEventListener('click',e=>{e.stopPropagation();userMuted=Score.on;Score.toggle()});
 document.querySelector('#nav .next').addEventListener('click',e=>{e.currentTarget.blur();if(swiped){swiped=false;return}step(1)});
 document.querySelector('#nav .prev').addEventListener('click',e=>{e.currentTarget.blur();if(swiped){swiped=false;return}step(-1)});
