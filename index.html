@@ -1,0 +1,1458 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>SKINORA 第二曲線</title>
+<style>:root{color-scheme:dark}*{box-sizing:border-box}img{max-width:100%}[hidden]{display:none!important}</style>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500;700&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=JetBrains+Mono:wght@300;400&display=swap">
+<style>
+/* Layout: fixed 1920x1080 stage scaled to the window (letterboxed); one slide visible at a time, cinematic dark single theme by choice */
+:root{
+  --ink:#0c100f; --ink-2:#141a18; --ink-3:#1d2522;
+  --bone:#f0e7de; --bone-dim:rgba(240,231,222,.62); --bone-faint:rgba(240,231,222,.18);
+  --skin:#e6c0ad; --rose:#d4917f; --rose-deep:#a8604f; --sage:#93b3a1; --sage-dim:rgba(147,179,161,.35);
+  --display:"Noto Serif TC","Songti TC",serif;
+  --body:"Noto Sans TC","PingFang TC",sans-serif;
+  --latin:"Cormorant Garamond","Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--body);overflow:hidden;font-variant-numeric:lining-nums;
+  padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
+#viewport{position:fixed;inset:0;background:var(--ink);overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center center;overflow:hidden;background:var(--ink)}
+.slide{position:absolute;inset:0;visibility:hidden;overflow:hidden}
+.slide.on{visibility:visible}
+.grain{position:absolute;inset:-50%;pointer-events:none;z-index:50;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grain 1.2s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}100%{transform:translate(1%,3%)}}
+.bg{position:absolute;inset:-4%;background-size:cover;background-position:center;will-change:transform}
+.veil{position:absolute;inset:0;pointer-events:none}
+.eyebrow{font-family:var(--mono);font-size:20px;letter-spacing:.32em;text-transform:uppercase;color:var(--bone-dim)}
+.src{position:absolute;left:140px;bottom:64px;font-family:var(--mono);font-size:16px;letter-spacing:.08em;color:rgba(240,231,222,.4)}
+.ch{display:inline-block;will-change:transform,opacity,filter}
+h1,h2{font-family:var(--display);font-weight:500;margin:0;letter-spacing:.02em}
+
+/* chrome */
+#hud{position:fixed;left:0;right:0;bottom:0;z-index:100;pointer-events:none}
+#progress{position:absolute;left:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--rose),var(--skin));width:0}
+#counter{position:absolute;right:max(28px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--bone-dim)}
+#hint{position:absolute;left:max(28px,env(safe-area-inset-left,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:rgba(240,231,222,.35);transition:opacity .8s}
+#nav{position:fixed;inset:0;z-index:90;display:flex}
+#nav button{flex:1;background:none;border:0;cursor:pointer;opacity:0}
+#nav button:focus,#nav button:focus-visible{outline:none;opacity:0}
+#nav .prev{flex:0 0 22%}
+
+/* ---------- S1 cover ---------- */
+#s1 .bg{background-image:url(assets/cover_texture.jpg)}
+#s1 .veil{background:linear-gradient(90deg,rgba(12,16,15,.94) 0%,rgba(12,16,15,.74) 32%,rgba(12,16,15,.05) 64%,rgba(12,16,15,.12) 100%),radial-gradient(ellipse at 78% 40%,rgba(255,196,160,.18),rgba(255,196,160,0) 60%)}
+#s1 svg.contours{position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:screen}
+#s1 .contours path{fill:none;stroke:var(--skin);stroke-width:1.1;opacity:.28}
+#s1 .copy{position:absolute;left:140px;top:250px;width:980px}
+#s1 h1{font-size:108px;line-height:1.3;margin-top:44px;font-weight:500}
+#s1 .tagline{margin:40px 0 0;font-family:var(--display);font-weight:300;font-size:38px;line-height:1.5;color:var(--skin);letter-spacing:.04em;opacity:0}
+#s1 h1 .em{color:var(--skin)}
+#s1 .sub{margin-top:30px;font-size:24px;font-weight:300;color:var(--bone-dim);letter-spacing:.06em}
+#s1 .sub b{font-family:var(--latin);font-weight:500;font-size:44px;color:var(--bone);letter-spacing:0}
+#s1 .rule{width:0;height:1px;background:var(--rose);margin-top:56px}
+#s1 .status{position:absolute;right:140px;top:96px;font-family:var(--mono);font-size:16px;letter-spacing:.2em;color:var(--rose);border:1px solid rgba(212,145,127,.5);padding:10px 18px;border-radius:999px}
+
+/* ---------- S2 door ---------- */
+#s2 .bg{background-image:url(assets/night_phone.jpg);inset:-4% 30% -4% -4%}
+#s2 .veil{background:linear-gradient(0deg,rgba(12,16,15,.9) 0%,rgba(12,16,15,0) 50%),linear-gradient(90deg,rgba(12,16,15,.1) 0%,rgba(12,16,15,.25) 45%,rgba(12,16,15,.94) 64%,var(--ink) 74%)}
+#s2 .tag{position:absolute;left:140px;top:96px}
+#s2 .lines{position:absolute;left:140px;bottom:200px;width:760px}
+#s2 .line{font-family:var(--display);font-size:44px;line-height:1.5;font-weight:300;color:var(--bone);opacity:0}
+#s2 .line .k{color:var(--skin);font-weight:500}
+#s2 .phone{position:absolute;left:1250px;top:110px;width:380px;height:760px;border-radius:58px;background:#0a0d0c;
+  box-shadow:0 0 0 2px #2a3330,0 0 0 12px #111614,0 60px 160px rgba(0,0,0,.7),0 0 120px rgba(147,179,161,.12)}
+#s2 .screen{position:absolute;inset:14px;border-radius:46px;overflow:hidden;background:#f5f2ee;color:#1d2321;font-family:var(--body)}
+#s2 .notch{position:absolute;top:12px;left:50%;width:110px;height:30px;margin-left:-55px;background:#0a0d0c;border-radius:20px;z-index:3}
+#s2 .sbar{height:56px}
+#s2 .search{margin:10px 22px 0;height:56px;border-radius:28px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.08);display:flex;align-items:center;padding:0 22px;font-size:20px;gap:12px}
+#s2 .search i{width:16px;height:16px;border:2px solid #7a8580;border-radius:50%;display:inline-block;position:relative}
+#s2 .search i::after{content:"";position:absolute;width:7px;height:2px;background:#7a8580;right:-6px;bottom:-3px;transform:rotate(45deg)}
+#s2 .q{white-space:nowrap}
+#s2 .caret{display:inline-block;width:2px;height:22px;background:#c4685a;animation:blink 1s steps(1) infinite;vertical-align:middle}
+@keyframes blink{50%{opacity:0}}
+#s2 .results{padding:22px 22px 0;display:grid;gap:14px}
+#s2 .res{background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 1px 6px rgba(0,0,0,.06);opacity:0}
+#s2 .res small{display:block;font-size:13px;color:#7a8580;margin-bottom:4px}
+#s2 .res b{font-size:17px;font-weight:500;line-height:1.4;display:block}
+#s2 .res.first{outline:2px solid #c4685a;outline-offset:2px}
+#s2 .res .who{display:inline-block;margin-top:8px;font-size:12px;padding:2px 8px;border-radius:999px;background:#f6e3de;color:#a8513f}
+#s2 .booking{position:absolute;inset:0;background:#f5f2ee;opacity:0;display:flex;flex-direction:column;align-items:center;padding-top:110px}
+#s2 .booking .hd{font-size:15px;color:#7a8580;letter-spacing:.06em}
+#s2 .booking .tt{font-size:22px;font-weight:500;margin-top:8px;text-align:center;padding:0 30px;line-height:1.4}
+#s2 .cal{margin-top:30px;width:300px;display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+#s2 .cal span{height:32px;border-radius:8px;background:#e9e4de}
+#s2 .empty{margin-top:34px;padding:16px 26px;border-radius:14px;background:#fff;border:1px dashed #c4685a;color:#a8513f;font-size:20px;font-weight:500}
+#s2 .takeaway{position:absolute;left:1180px;bottom:80px;width:620px;font-size:22px;line-height:1.7;color:var(--bone-dim);opacity:0}
+#s2 .takeaway b{color:var(--bone);font-weight:500;font-family:var(--display);font-size:34px;display:block;margin-bottom:6px}
+
+/* ---------- S3 shift ---------- */
+#s3 .gym{position:absolute;right:0;top:0;bottom:0;width:62%;background:url(assets/gym_back.jpg) center/cover;opacity:0}
+#s3 .gymveil{position:absolute;inset:0;background:linear-gradient(90deg,var(--ink) 38%,rgba(12,16,15,.55) 62%,rgba(12,16,15,.2) 100%)}
+#s3 .head{position:absolute;left:140px;top:110px;width:1100px}
+#s3 h2{font-size:72px;line-height:1.32;margin-top:30px}
+#s3 h2 .em{color:var(--skin)}
+#s3 .births{position:absolute;left:140px;top:470px}
+#s3 .births .num{font-family:var(--latin);font-size:168px;line-height:1;font-weight:500;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+#s3 .births .cap{font-size:22px;color:var(--bone-dim);margin-top:10px;letter-spacing:.06em}
+#s3 .births .delta{display:inline-block;margin-left:22px;font-family:var(--mono);font-size:26px;color:var(--rose);vertical-align:top;margin-top:30px}
+#s3 .field{position:absolute;inset:0;pointer-events:none}
+#s3 .dot{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--bone-faint);will-change:transform,left,top}
+#s3 .dot.mom{background:var(--rose)}
+#s3 .dot.fit{background:var(--sage);box-shadow:0 0 18px 4px rgba(147,179,161,.55)}
+#s3 .lab{position:absolute;font-size:22px;color:var(--bone-dim);opacity:0;letter-spacing:.04em}
+#s3 .lab b{display:block;font-family:var(--latin);font-weight:500;font-size:64px;color:var(--bone);line-height:1.05}
+#s3 .lab.mom b{color:var(--rose)} #s3 .lab.fit b{color:var(--sage)}
+#s3 .punch{position:absolute;right:140px;bottom:150px;width:620px;text-align:right;font-family:var(--display);font-size:52px;line-height:1.4;opacity:0}
+#s3 .punch small{display:block;font-family:var(--body);font-size:22px;color:var(--bone-dim);margin-top:14px;line-height:1.6}
+
+/* ---------- S4 radar ---------- */
+#s4{background:radial-gradient(ellipse at 66% 50%,#16201d 0%,var(--ink) 62%)}
+#s4 .head{position:absolute;left:140px;top:110px;width:760px}
+#s4 h2{font-size:76px;line-height:1.3;margin-top:30px}
+#s4 h2 .em{color:var(--rose)}
+#s4 .facts{position:absolute;left:140px;top:520px;width:700px;display:grid;gap:34px}
+#s4 .fact{opacity:0;display:grid;grid-template-columns:150px 1fr;gap:26px;align-items:baseline;border-top:1px solid var(--bone-faint);padding-top:22px}
+#s4 .fact b{font-family:var(--latin);font-weight:500;font-size:72px;line-height:1;color:var(--bone)}
+#s4 .fact.rose b{color:var(--rose)}
+#s4 .fact span{font-size:24px;line-height:1.6;color:var(--bone-dim)}
+#s4 .fact span q{color:var(--bone);quotes:"「" "」"}
+#s4 .radar{position:absolute;left:1000px;top:90px;width:900px;height:900px}
+#s4 .ring{position:absolute;border:1px solid rgba(147,179,161,.22);border-radius:50%}
+#s4 .axis{position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(147,179,161,.12)}
+#s4 .axis.h{left:0;right:0;top:50%;bottom:auto;width:auto;height:1px}
+#s4 .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(147,179,161,0) 0deg,rgba(147,179,161,0) 300deg,rgba(147,179,161,.32) 358deg,rgba(147,179,161,.6) 360deg);mix-blend-mode:screen}
+#s4 .core{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;border:1.5px dashed rgba(240,231,222,.55);display:grid;place-items:center;text-align:center}
+#s4 .core b{font-family:var(--latin);font-size:56px;font-weight:500;line-height:1;display:block}
+#s4 .core small{font-size:15px;color:var(--bone-dim);letter-spacing:.1em}
+#s4 .blip{position:absolute;opacity:0;transform:translate(-50%,-50%)}
+#s4 .blip i{display:block;width:16px;height:16px;border-radius:50%;margin:0 auto;background:var(--sage);box-shadow:0 0 0 0 rgba(147,179,161,.6)}
+#s4 .blip.rose i{background:var(--rose);box-shadow:0 0 0 0 rgba(212,145,127,.6)}
+#s4 .blip .t{position:absolute;left:26px;top:-10px;white-space:nowrap;font-size:19px;color:var(--bone)}
+#s4 .blip .t small{display:block;font-family:var(--mono);font-size:14px;color:var(--bone-dim);margin-top:2px}
+#s4 .blip.left .t{left:auto;right:26px;text-align:right}
+#s4 .legend{position:absolute;left:1000px;bottom:64px;display:flex;gap:36px;font-size:17px;color:var(--bone-dim)}
+#s4 .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:10px;vertical-align:0}
+
+/* ---------- S5 curves ---------- */
+#s5 .bg{background-image:url(assets/two_ridges.jpg)}
+#s5 .veil{background:linear-gradient(180deg,rgba(12,16,15,.82) 0%,rgba(12,16,15,.35) 40%,rgba(12,16,15,.55) 75%,rgba(12,16,15,.95) 100%)}
+#s5 .head{position:absolute;left:140px;top:100px;width:1200px}
+#s5 h2{font-size:72px;line-height:1.3;margin-top:28px}
+#s5 h2 .em{color:var(--skin)}
+#s5 svg.curves{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visible}
+#s5 .c1{fill:none;stroke:var(--sage);stroke-width:4;stroke-linecap:round}
+#s5 .c2{fill:none;stroke:var(--skin);stroke-width:5;stroke-linecap:round}
+#s5 .a2{fill:url(#g2);opacity:0}
+#s5 .cl{position:absolute;opacity:0}
+#s5 .cl small{display:block;font-family:var(--mono);font-size:16px;letter-spacing:.18em;color:var(--bone-dim)}
+#s5 .cl b{font-family:var(--latin);font-weight:500;font-size:68px;line-height:1.1}
+#s5 .cl span{display:block;font-size:20px;color:var(--bone-dim);margin-top:4px}
+#s5 .cl.one b{color:var(--sage)} #s5 .cl.two b{color:var(--skin)}
+#s5 .total{position:absolute;right:140px;top:110px;text-align:right}
+#s5 .total small{font-family:var(--mono);font-size:18px;letter-spacing:.24em;color:var(--bone-dim)}
+#s5 .total b{display:block;font-family:var(--display);font-weight:300;letter-spacing:-.02em;font-size:200px;line-height:.95;font-variant-numeric:tabular-nums;color:var(--bone)}
+#s5 .total b em{font-style:normal;font-family:var(--display);font-size:64px;margin-left:10px}
+#s5 .parts{position:absolute;left:140px;right:140px;bottom:130px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+#s5 .part{opacity:0;border-top:1px solid rgba(230,192,173,.45);padding-top:18px;display:grid;grid-template-columns:1fr auto;align-items:end;gap:12px}
+#s5 .part small{display:block;font-size:20px;color:var(--bone-dim)}
+#s5 .part b{font-family:var(--latin);font-weight:500;font-size:52px;line-height:1.1}
+#s5 .part b em{font-style:normal;font-family:var(--body);font-size:20px;margin-left:4px;color:var(--bone-dim)}
+#s5 .part.has-thumb{grid-template-columns:auto 1fr;gap:18px}
+#s5 .part .thumb{width:96px;height:72px;border-radius:10px;background:url(assets/product_bottle.jpg) 70% 50%/cover;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+
+/* ---------- shared for 6-14 ---------- */
+.hd{position:absolute;left:140px;top:100px;width:1100px}
+.hd h2{font-size:72px;line-height:1.3;margin-top:28px}
+.hd h2 .em{color:var(--skin)}
+.hd h2 .em.r{color:var(--rose)}
+.lede{font-size:26px;line-height:1.7;color:var(--bone-dim);font-weight:300}
+
+/* ---------- S6 journey ---------- */
+#s6 .bg{background-image:url(assets/morning_woman.jpg);background-position:30% 40%}
+#s6 .veil{background:linear-gradient(90deg,rgba(12,16,15,0) 30%,rgba(12,16,15,.7) 52%,rgba(12,16,15,.94) 64%)}
+#s6 .hd{left:1030px;width:780px}
+#s6 .hd h2{font-size:64px}
+#s6 .src{left:1030px;width:760px}
+#s6 .tl{position:absolute;left:1030px;top:440px;width:760px;height:560px}
+#s6 .rail{position:absolute;left:118px;top:14px;width:2px;height:500px;background:var(--bone-faint)}
+#s6 .rail i{position:absolute;left:0;top:0;width:2px;height:0;background:linear-gradient(var(--skin),var(--rose))}
+#s6 .step{position:absolute;left:0;width:760px;display:grid;grid-template-columns:100px 40px 1fr;align-items:start;opacity:0}
+#s6 .step .d{font-family:var(--latin);font-size:30px;font-weight:500;color:var(--skin);text-align:right;line-height:1.1}
+#s6 .step .d small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--bone-dim)}
+#s6 .step .p{width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--skin);margin:8px 0 0 12px}
+#s6 .step b{display:block;font-size:28px;font-weight:500;line-height:1.35}
+#s6 .step span{display:block;font-size:19px;color:var(--bone-dim);margin-top:4px;line-height:1.5}
+#s6 .step.prod b::after{content:"";display:inline-block;width:46px;height:34px;margin-left:14px;vertical-align:-6px;border-radius:6px;background:url(assets/homecare_apply.jpg) 50% 50%/cover}
+
+/* ---------- S7 funnel ---------- */
+#s7 .bg{background-image:url(assets/light_funnel.jpg);opacity:.55}
+#s7 .veil{background:linear-gradient(180deg,rgba(12,16,15,.94) 0%,rgba(12,16,15,.55) 34%,rgba(12,16,15,.35) 60%,rgba(12,16,15,.9) 100%)}
+#s7 .cols{position:absolute;left:140px;right:140px;top:430px;height:520px;display:flex;align-items:center;justify-content:space-between}
+#s7 .col{position:relative;width:200px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#s7 .bar{width:100%;border-radius:14px;background:linear-gradient(180deg,rgba(230,192,173,.38),rgba(230,192,173,.08));border:1px solid rgba(230,192,173,.45);backdrop-filter:blur(6px);transform-origin:center}
+#s7 .col.ret .bar{background:linear-gradient(180deg,rgba(147,179,161,.35),rgba(147,179,161,.06));border:1px dashed rgba(147,179,161,.7)}
+#s7 .col .v{position:absolute;top:0;font-family:var(--latin);font-weight:500;font-size:60px;line-height:1;white-space:nowrap}
+#s7 .col .v em{font-style:normal;font-family:var(--body);font-size:22px;color:var(--bone-dim);margin-left:4px}
+#s7 .col .l{position:absolute;bottom:0;white-space:nowrap;font-size:22px;color:var(--bone);text-align:center;line-height:1.4}
+#s7 .col .l small{display:block;font-size:16px;color:var(--bone-dim)}
+#s7 .col.ret .v{color:var(--sage)}
+#s7 .rate{position:absolute;top:50%;right:-62px;transform:translate(50%,-50%);font-family:var(--mono);font-size:17px;color:var(--rose);background:rgba(12,16,15,.8);border:1px solid rgba(212,145,127,.45);border-radius:999px;padding:5px 12px;opacity:0;z-index:2}
+
+/* ---------- S8 flywheel ---------- */
+#s8{background:radial-gradient(ellipse at 68% 55%,#1b2420 0%,var(--ink) 60%)}
+#s8 .hd{width:720px}
+#s8 .pts{position:absolute;left:140px;top:500px;width:640px;display:grid;gap:30px}
+#s8 .pt{opacity:0;border-left:2px solid var(--rose);padding-left:24px}
+#s8 .pt b{display:block;font-size:28px;font-weight:500;line-height:1.4}
+#s8 .pt span{display:block;font-size:20px;color:var(--bone-dim);margin-top:6px;line-height:1.55}
+#s8 svg.wheel{position:absolute;left:870px;top:110px;width:1000px;height:900px;overflow:visible}
+#s8 .ring{fill:none;stroke:rgba(230,192,173,.22);stroke-width:2}
+#s8 .ticks{fill:none;stroke:rgba(230,192,173,.35);stroke-width:10;stroke-dasharray:2 22}
+#s8 .flow{fill:none;stroke:url(#gflow);stroke-width:5;stroke-linecap:round}
+#s8 .ring2{fill:none;stroke:rgba(147,179,161,.35);stroke-width:2}
+#s8 .flow2{fill:none;stroke:var(--sage);stroke-width:4;stroke-linecap:round}
+#s8 .node{position:absolute;transform:translate(-50%,-50%);text-align:center;opacity:0}
+#s8 .node i{display:block;width:26px;height:26px;margin:0 auto 12px;border-radius:50%;background:var(--ink);border:3px solid var(--skin)}
+#s8 .node b{display:block;font-size:26px;font-weight:500;white-space:nowrap}
+#s8 .node span{display:block;font-size:17px;color:var(--bone-dim);white-space:nowrap;margin-top:2px}
+#s8 .node.g i{border-color:var(--sage)}
+#s8 .node b,#s8 .node span{background:rgba(14,19,17,.9);padding:0 10px;border-radius:6px}
+#s8 .node.g b{font-size:20px}
+#s8 .center{position:absolute;left:1270px;top:560px;transform:translate(-50%,-50%);text-align:center;opacity:0}
+#s8 .center small{display:block;font-family:var(--mono);font-size:15px;letter-spacing:.24em;color:var(--bone-dim)}
+#s8 .center b{display:block;font-family:var(--display);font-size:46px;font-weight:500;margin-top:6px}
+#s8 .center b em{font-style:normal;color:var(--sage)}
+
+/* ---------- S9 AI hub ---------- */
+#s9 .bg{background-image:url(assets/consult_assessment.jpg);opacity:.32;background-position:60% 50%}
+#s9 .veil{background:linear-gradient(90deg,var(--ink) 0%,rgba(12,16,15,.6) 50%,rgba(12,16,15,.7) 100%)}
+#s9 svg.net{position:absolute;inset:0;width:1920px;height:1080px}
+#s9 .wire{fill:none;stroke:rgba(230,192,173,.28);stroke-width:2}
+#s9 .wire.g{stroke:rgba(147,179,161,.3)}
+#s9 .pkt{position:absolute;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--skin);box-shadow:0 0 14px 3px rgba(230,192,173,.6);offset-rotate:0deg;opacity:0}
+#s9 .pkt.g{background:var(--sage);box-shadow:0 0 14px 3px rgba(147,179,161,.6)}
+#s9 .in{position:absolute;left:150px;width:360px;padding:16px 22px;border-radius:22px 22px 22px 6px;background:rgba(240,231,222,.08);border:1px solid var(--bone-faint);opacity:0}
+#s9 .in small{display:block;font-family:var(--mono);font-size:13px;letter-spacing:.16em;color:var(--bone-dim)}
+#s9 .in b{display:block;font-size:24px;font-weight:500;margin-top:4px}
+#s9 .hub{position:absolute;left:960px;top:650px;width:250px;height:250px;margin:-125px 0 0 -125px;border-radius:50%;display:grid;place-items:center;text-align:center;
+  background:radial-gradient(circle,rgba(230,192,173,.22),rgba(230,192,173,.04) 70%);border:1.5px solid rgba(230,192,173,.6);opacity:0}
+#s9 .hub b{display:block;font-family:var(--latin);font-size:56px;font-weight:500;line-height:1}
+#s9 .hub span{display:block;font-size:20px;margin-top:6px}
+#s9 .hub small{display:block;font-size:15px;color:var(--bone-dim);margin-top:4px}
+#s9 .halo{position:absolute;left:960px;top:650px;width:250px;height:250px;margin:-125px 0 0 -125px;border-radius:50%;border:1px solid rgba(230,192,173,.5);opacity:0}
+#s9 .out{position:absolute;left:1420px;width:380px;display:flex;align-items:center;gap:16px;opacity:0}
+#s9 .out i{flex:0 0 18px;height:18px;border-radius:50%;background:var(--skin)}
+#s9 .out.g i{background:var(--sage)}
+#s9 .out b{font-size:24px;font-weight:500}
+#s9 .out span{display:block;font-size:16px;color:var(--bone-dim)}
+#s9 .rule9{position:absolute;left:140px;bottom:110px;font-size:20px;color:var(--bone-dim);opacity:0;border:1px solid rgba(212,145,127,.4);border-radius:12px;padding:12px 20px}
+#s9 .rule9 b{color:var(--rose);font-weight:500;margin-right:10px}
+
+/* ---------- S10 creative engine ---------- */
+#s10{background:radial-gradient(ellipse at 75% 50%,#1a221f 0%,var(--ink) 65%)}
+#s10 .hd{width:780px}
+#s10 .hd h2{font-size:64px}
+#s10 .stats{position:absolute;left:140px;top:520px;width:640px;display:grid;gap:26px}
+#s10 .st{opacity:0;display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:baseline;border-top:1px solid var(--bone-faint);padding-top:18px}
+#s10 .st b{font-family:var(--latin);font-weight:500;font-size:66px;line-height:1}
+#s10 .st span{font-size:21px;color:var(--bone-dim);line-height:1.55}
+#s10 .feed{position:absolute;left:860px;top:-160px;width:1060px;height:1400px;display:flex;gap:30px;transform:rotate(-7deg);
+  -webkit-mask-image:linear-gradient(180deg,transparent 4%,#000 22%,#000 78%,transparent 96%);mask-image:linear-gradient(180deg,transparent 4%,#000 22%,#000 78%,transparent 96%)}
+#s10 .colf{flex:0 0 300px;display:flex;flex-direction:column;gap:30px;will-change:transform}
+#s10 .card{flex:0 0 auto;width:300px;border-radius:22px;background:#f5f1ec;color:#1d2321;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.45)}
+#s10 .card .top{display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:14px}
+#s10 .card .top i{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#d4917f,#e6c0ad);display:grid;place-items:center;font-style:normal;color:#fff;font-family:var(--latin);font-size:18px}
+#s10 .card .top small{display:block;color:#7a8580;font-size:11px}
+#s10 .card .vis{height:250px;background-size:cover;background-position:center;position:relative;display:flex;align-items:flex-end}
+#s10 .card .vis::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.72))}
+#s10 .card .hook{position:relative;padding:16px 18px;color:#fff;font-family:var(--display);font-size:24px;line-height:1.38;font-weight:500}
+#s10 .card .cta{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;font-size:13px;color:#56605b}
+#s10 .card .cta b{background:#1d2321;color:#fff;border-radius:8px;padding:7px 12px;font-weight:500;font-size:13px}
+#s10 .card .tagh{position:absolute;top:12px;left:12px;z-index:1;font-family:var(--mono);font-size:11px;letter-spacing:.12em;background:rgba(255,255,255,.9);color:#a8513f;border-radius:6px;padding:3px 8px}
+#s10 .draft{position:absolute;left:140px;bottom:64px;z-index:3;font-family:var(--mono);font-size:15px;letter-spacing:.12em;color:var(--rose);background:rgba(12,16,15,.8);padding:6px 12px;border-radius:8px}
+
+/* ---------- S11 dual engines ---------- */
+#s11{background:linear-gradient(180deg,#101614 0%,var(--ink) 100%)}
+#s11 .hd{width:1000px}
+#s11 svg.dual{position:absolute;left:140px;top:380px;width:1640px;height:470px;overflow:visible}
+#s11 .band{fill:rgba(240,231,222,.035)}
+#s11 .band.b2{fill:rgba(230,192,173,.05)}
+#s11 .bl{fill:var(--bone-dim);font-family:var(--mono);font-size:15px;letter-spacing:.12em}
+#s11 .bl2{fill:var(--bone);font-family:var(--body);font-size:20px}
+#s11 .gl{stroke:rgba(240,231,222,.08)}
+#s11 .tk{fill:rgba(240,231,222,.45);font-family:var(--mono);font-size:14px}
+#s11 .adbar{fill:url(#gad)}
+#s11 .org{fill:none;stroke:var(--sage);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+#s11 .orga{fill:url(#gorg)}
+#s11 .endv{font-family:var(--latin);font-size:34px;font-weight:500}
+#s11 .legend11{position:absolute;right:140px;top:300px;display:flex;gap:30px;font-size:18px;color:var(--bone-dim)}
+#s11 .legend11 i{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:10px;vertical-align:-1px}
+#s11 .chips{position:absolute;left:140px;right:140px;bottom:96px;display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+#s11 .chip{opacity:0;border:1px solid rgba(147,179,161,.35);border-radius:14px;padding:14px 18px;background:rgba(147,179,161,.06)}
+#s11 .chip b{display:block;font-size:21px;font-weight:500}
+#s11 .chip span{display:block;font-size:16px;color:var(--bone-dim);margin-top:4px}
+
+/* ---------- S12 90 days ---------- */
+#s12{background:radial-gradient(ellipse at 30% 100%,#1c2420 0%,var(--ink) 60%)}
+#s12 .gantt{position:absolute;left:140px;top:400px;width:1340px}
+#s12 .wk{display:grid;grid-template-columns:260px repeat(13,1fr);font-family:var(--mono);font-size:14px;color:var(--bone-dim);letter-spacing:.06em;margin-bottom:14px}
+#s12 .wk span{text-align:center}
+#s12 .row{display:grid;grid-template-columns:260px repeat(13,1fr);align-items:center;height:92px;border-top:1px solid var(--bone-faint)}
+#s12 .row .nm{font-size:24px;font-weight:500;opacity:0;padding-right:14px}
+#s12 .row .nm small{white-space:nowrap;font-size:15px}
+#s12 .row .nm small{display:block;font-size:16px;color:var(--bone-dim);font-weight:400;margin-top:2px}
+#s12 .bar{height:54px;border-radius:12px;background:linear-gradient(90deg,rgba(212,145,127,.75),rgba(230,192,173,.55));display:flex;align-items:center;padding:0 18px;font-size:17px;color:#1a1412;font-weight:500;white-space:nowrap;overflow:hidden;transform-origin:left center;transform:scaleX(0)}
+#s12 .bar.g{background:linear-gradient(90deg,rgba(147,179,161,.8),rgba(147,179,161,.5))}
+#s12 .today{position:absolute;top:30px;bottom:0;width:2px;background:var(--skin);left:260px;opacity:0}
+#s12 .check{position:absolute;left:1540px;top:400px;width:240px;opacity:0}
+#s12 .check small{font-family:var(--mono);font-size:15px;letter-spacing:.2em;color:var(--skin)}
+#s12 .check b{display:block;font-family:var(--display);font-size:38px;font-weight:500;margin:10px 0 18px}
+#s12 .check li{list-style:none;font-size:19px;line-height:1.5;color:var(--bone-dim);padding:12px 0;border-top:1px solid var(--bone-faint);display:grid;grid-template-columns:30px 1fr}
+#s12 .check li::before{content:"";width:16px;height:16px;border:2px solid var(--sage);border-radius:4px;margin-top:5px}
+#s12 .check ul{margin:0;padding:0}
+
+/* ---------- S13 engagement ---------- */
+#s13{background:radial-gradient(ellipse at 50% 0%,#1b2320 0%,var(--ink) 62%)}
+#s13 .hd{width:1300px}
+#s13 .plans{position:absolute;left:140px;right:140px;top:420px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+#s13 .plan{position:relative;opacity:0;border:1px solid var(--bone-faint);border-radius:22px;padding:30px 32px;background:rgba(240,231,222,.03)}
+#s13 .plan.rec{border:1.5px solid var(--skin);background:linear-gradient(180deg,rgba(230,192,173,.12),rgba(230,192,173,.02));box-shadow:0 30px 90px rgba(212,145,127,.12)}
+#s13 .plan .badge{position:absolute;top:-16px;right:28px;font-family:var(--mono);font-size:13px;letter-spacing:.18em;background:var(--skin);color:#1a1412;padding:5px 12px;border-radius:999px}
+#s13 .plan small{font-family:var(--mono);font-size:14px;letter-spacing:.2em;color:var(--bone-dim)}
+#s13 .plan h3{margin:8px 0 0;font-size:30px;font-weight:500}
+#s13 .plan .pr{font-family:var(--latin);font-size:76px;font-weight:500;line-height:1.05;margin-top:14px}
+#s13 .plan .pr em{font-style:normal;font-family:var(--body);font-size:22px;color:var(--bone-dim);margin-left:6px}
+#s13 .plan p{font-size:18px;line-height:1.65;color:var(--bone-dim);margin:12px 0 0}
+#s13 .lower{position:absolute;left:140px;right:140px;top:830px;display:grid;grid-template-columns:1fr 1fr;gap:60px}
+#s13 .terms{opacity:0;font-size:20px;line-height:1.75;color:var(--bone-dim)}
+#s13 .terms b{color:var(--bone);font-weight:500}
+#s13 .stairs{position:relative;height:170px;opacity:0}
+#s13 .stair{position:absolute;bottom:0;width:23%;border-radius:10px 10px 0 0;background:linear-gradient(180deg,rgba(230,192,173,.5),rgba(230,192,173,.08));display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding-top:10px;transform-origin:bottom;transform:scaleY(0)}
+#s13 .stt{position:absolute;left:0;top:0;font-family:var(--mono);font-size:15px;letter-spacing:.2em;color:var(--skin)}
+#s13 .stair b{font-family:var(--latin);font-size:36px;font-weight:500;line-height:1}
+#s13 .stair span{font-size:14px;color:var(--bone);margin-top:4px;text-align:center;line-height:1.3}
+
+/* ---------- S14 closing ---------- */
+#s14 .bg{background-image:url(assets/open_door.jpg);background-position:60% 50%}
+#s14 .veil{background:linear-gradient(90deg,rgba(12,16,15,.92) 0%,rgba(12,16,15,.6) 38%,rgba(12,16,15,0) 62%)}
+#s14 .hd{top:150px;width:900px}
+#s14 .hd h2{font-size:92px;line-height:1.28}
+#s14 .next{position:absolute;left:140px;top:610px;width:760px;display:grid;gap:22px}
+#s14 .nx{opacity:0;display:grid;grid-template-columns:70px 1fr;align-items:baseline;border-top:1px solid rgba(240,231,222,.22);padding-top:16px}
+#s14 .nx b{font-family:var(--latin);font-size:44px;font-weight:500;color:var(--skin);line-height:1}
+#s14 .nx span{font-size:24px;line-height:1.5}
+#s14 .nx span small{display:block;font-size:18px;color:var(--bone-dim)}
+#s14 .sign{position:absolute;right:140px;bottom:96px;font-family:var(--latin);font-style:italic;font-size:30px;color:var(--bone);opacity:0;text-align:right}
+#s14 .sign{text-shadow:none;background:#000;box-shadow:0 20px 60px rgba(0,0,0,.6);border:1px solid rgba(240,231,222,.14);border-radius:20px;padding:22px 30px;bottom:84px}
+#s14 .sign small{display:block;font-family:var(--mono);font-style:normal;font-size:14px;letter-spacing:.24em;color:var(--bone-dim);margin-top:6px}
+#s14 .glow{position:absolute;left:1160px;top:120px;width:400px;height:700px;background:radial-gradient(ellipse,rgba(255,200,150,.35),rgba(255,200,150,0) 70%);mix-blend-mode:screen;opacity:0}
+
+/* sound toggle */
+#snd{position:absolute;right:max(130px,calc(env(safe-area-inset-right,0px) + 130px));bottom:max(12px,env(safe-area-inset-bottom,0px));pointer-events:auto;display:flex;align-items:center;gap:10px;background:none;border:1px solid rgba(240,231,222,.2);border-radius:999px;color:var(--bone-dim);font-family:var(--mono);font-size:12px;letter-spacing:.14em;padding:6px 14px;cursor:pointer}
+#snd:focus-visible{outline:1px solid var(--rose)}
+#snd .eq{display:flex;gap:2px;align-items:flex-end;height:12px}
+#snd .eq i{width:2px;height:3px;background:var(--skin)}
+#snd.on .eq i{animation:eq 1s ease-in-out infinite}
+#snd.on .eq i:nth-child(2){animation-delay:.2s}#snd.on .eq i:nth-child(3){animation-delay:.45s}#snd.on .eq i:nth-child(4){animation-delay:.1s}
+@keyframes eq{0%,100%{height:3px}50%{height:12px}}
+
+#s9 .in.g{border-color:rgba(147,179,161,.45)}
+
+/* ---------- S15 pricing ---------- */
+#s15{background:radial-gradient(ellipse at 80% 30%,#1d2320 0%,var(--ink) 60%)}
+#s15 .hd{width:1100px}
+#s15 .l15{position:absolute;left:1180px;top:200px;width:600px;opacity:0}
+#s15 .axis15{position:absolute;left:0;top:392px;width:1920px;height:440px}
+#s15 .tk15{position:absolute;top:0;height:440px}
+#s15 .tk15 i{position:absolute;left:0;top:26px;bottom:0;width:1px;background:rgba(240,231,222,.08)}
+#s15 .tk15 span{position:absolute;top:0;left:0;transform:translateX(-50%);font-family:var(--mono);font-size:14px;color:var(--bone-dim);white-space:nowrap}
+#s15 .pr-row{position:absolute;left:0;width:1920px;height:60px}
+#s15 .pl{position:absolute;left:140px;top:14px;width:440px;font-size:22px;color:var(--bone-dim);opacity:0}
+#s15 .pr-row.sk .pl{color:var(--skin);font-weight:500}
+#s15 .rg{position:absolute;top:8px;height:44px;border-radius:22px;background:rgba(240,231,222,.12);border:1px solid rgba(240,231,222,.22);transform-origin:left center;transform:scaleX(0)}
+#s15 .rg.med{background:rgba(147,179,161,.14);border-color:rgba(147,179,161,.4)}
+#s15 .rg.sk{background:linear-gradient(90deg,rgba(212,145,127,.55),rgba(230,192,173,.4));border-color:var(--skin);box-shadow:0 0 40px rgba(212,145,127,.25)}
+#s15 .rg span{position:absolute;left:calc(100% + 16px);top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:16px;color:var(--bone-dim);white-space:nowrap}
+#s15 .rg.sk span{color:var(--skin);font-weight:500}
+#s15 .mk{position:absolute;transform:translateX(-50%);text-align:center;opacity:0;display:flex;flex-direction:column-reverse;align-items:center}
+#s15 .mk b{display:block;font-family:var(--latin);font-weight:500;font-size:28px;color:var(--skin);line-height:1}
+#s15 .mk i{display:block;width:2px;height:18px;margin:0 auto 6px;background:var(--skin)}
+#s15 .prices{position:absolute;left:140px;right:140px;bottom:120px;display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+#s15 .pc{opacity:0;border:1px solid var(--bone-faint);border-radius:16px;padding:16px 18px;background:rgba(240,231,222,.03)}
+#s15 .pc.hi{border-color:var(--skin);background:linear-gradient(180deg,rgba(230,192,173,.14),rgba(230,192,173,.02))}
+#s15 .pc small{display:block;font-size:16px;color:var(--bone-dim)}
+#s15 .pc b{display:block;font-family:var(--latin);font-weight:500;font-size:44px;line-height:1.15;margin-top:4px}
+#s15 .pc b em{font-style:normal;font-family:var(--body);font-size:18px;color:var(--bone-dim);margin-left:4px}
+#s15 .pc span{display:block;font-size:15px;color:var(--bone-dim)}
+
+/* ---------- S16 ad mix ---------- */
+#s16{background:radial-gradient(ellipse at 80% 20%,#1b2320 0%,var(--ink) 60%)}
+#s16 .tot16{position:absolute;right:140px;top:110px;text-align:right;opacity:0}
+#s16 .tot16 small{font-family:var(--mono);font-size:15px;letter-spacing:.22em;color:var(--bone-dim)}
+#s16 .tot16 b{display:block;font-family:var(--latin);font-weight:500;font-size:120px;line-height:1}
+#s16 .tot16 b em{font-style:normal;font-family:var(--display);font-size:40px;margin-left:6px}
+#s16 .tot16 span{font-size:19px;color:var(--bone-dim)}
+#s16 .ph{position:absolute;left:140px;right:140px;height:64px}
+#s16 .pn{position:absolute;left:0;top:4px;width:270px;font-size:18px;color:var(--bone-dim);opacity:0}
+#s16 .pn b{font-size:26px;color:var(--bone);font-weight:500;margin-right:10px}
+#s16 .pn small{display:block;font-family:var(--mono);font-size:14px}
+#s16 .pbar{position:absolute;left:290px;right:0;top:6px;height:52px;display:flex;gap:4px;transform-origin:left center;transform:scaleX(0)}
+#s16 .sg{display:flex;align-items:center;justify-content:center;border-radius:8px;font-family:var(--mono);font-size:15px;color:#151a18;font-weight:500;min-width:0}
+.post{--c:#e6c0ad}.lead{--c:#d4917f}.goog{--c:#93b3a1}.rt{--c:#b0705f}.shop{--c:#6f9d88}.test{--c:rgba(240,231,222,.4)}
+#s16 .sg{background:var(--c)}
+#s16 .cards16{position:absolute;left:140px;right:140px;top:690px;display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+#s16 .ac{opacity:0;position:relative;border:1px solid var(--bone-faint);border-radius:14px;padding:18px 16px 16px;background:rgba(240,231,222,.03);overflow:hidden}
+#s16 .ac i{position:absolute;left:0;top:0;right:0;height:4px;background:var(--c)}
+#s16 .ac small{font-size:13px;color:var(--bone-dim)}
+#s16 .ac b{display:block;font-size:22px;font-weight:500;margin-top:2px}
+#s16 .ac .amt{font-family:var(--latin);font-size:46px;font-weight:500;line-height:1.1;margin-top:6px;color:var(--c)}
+#s16 .ac .amt em{font-style:normal;font-family:var(--body);font-size:15px;color:var(--bone-dim);margin-left:4px}
+#s16 .ac .yr{font-family:var(--mono);font-size:13px;color:var(--bone-dim)}
+#s16 .ac p{font-size:15px;line-height:1.5;color:var(--bone-dim);margin:8px 0 0;min-height:68px}
+#s16 .ac .kpi16{margin-top:8px;font-size:14px;color:var(--bone);border-top:1px solid var(--bone-faint);padding-top:8px}
+
+/* ---------- S17 ad KPI ---------- */
+#s17{background:radial-gradient(ellipse at 25% 70%,#1d2420 0%,var(--ink) 62%)}
+#s17 .hd{width:900px}
+#s17 .hd h2{font-size:64px}
+#s17 .ly{position:absolute;height:86px;border-radius:12px;background:linear-gradient(90deg,rgba(230,192,173,.2),rgba(212,145,127,.12));border:1px solid rgba(230,192,173,.4);display:grid;grid-template-columns:1fr auto;align-items:center;padding:0 24px;opacity:0}
+#s17 .ly:nth-of-type(n){}
+#s17 .lt b{font-size:22px;font-weight:500}
+#s17 .lt small{display:block;font-size:14px;color:var(--bone-dim)}
+#s17 .lv{font-family:var(--latin);font-weight:500;font-size:44px;text-align:right;line-height:1}
+#s17 .lk{position:absolute;left:calc(100% + 18px);top:50%;transform:translateY(-50%);white-space:nowrap;font-family:var(--mono);font-size:16px;color:var(--rose);border:1px solid rgba(212,145,127,.45);border-radius:999px;padding:5px 12px;background:rgba(12,16,15,.8)}
+#s17 .kt{position:absolute;left:1250px;top:330px;width:530px;opacity:0}
+#s17 .kth{font-family:var(--mono);font-size:15px;letter-spacing:.2em;color:var(--skin);margin-bottom:12px}
+#s17 table{width:100%;border-collapse:collapse;font-size:18px}
+#s17 th{font-weight:400;font-size:14px;color:var(--bone-dim);text-align:right;padding:8px 6px;border-bottom:1px solid var(--bone-faint)}
+#s17 th:first-child,#s17 td:first-child{text-align:left}
+#s17 td{padding:11px 6px;border-bottom:1px solid rgba(240,231,222,.08);text-align:right;font-variant-numeric:tabular-nums}
+#s17 td.hl{color:var(--skin);font-weight:500}
+#s17 .kn{font-size:15px;line-height:1.6;color:var(--bone-dim);margin-top:14px}
+
+/* ---------- S13 quantified plans (override) ---------- */
+#s13 .hd h2{font-size:64px}
+#s13 .plans{top:360px}
+#s13 .plan{display:flex;flex-direction:column;padding:26px 28px;height:560px;box-sizing:border-box}
+#s13 .plan .pr{font-size:64px;margin-top:6px}
+#s13 .plan .fl{font-size:17px;color:var(--bone-dim);margin-top:2px}
+#s13 .plan .fl b{color:var(--skin);font-weight:500}
+#s13 .plan ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:7px}
+#s13 .plan li{font-size:17px;line-height:1.45;padding-left:18px;position:relative;color:var(--bone)}
+#s13 .plan li::before{content:"";position:absolute;left:0;top:10px;width:7px;height:7px;border-radius:50%;background:var(--skin)}
+#s13 .plan .eff{margin-top:auto;padding-top:14px;border-top:1px solid var(--bone-faint);font-size:16px;line-height:1.55;color:var(--bone-dim)}
+#s13 .plan .eff b{display:block;font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--sage);font-weight:400;margin-bottom:4px}
+
+/* ---------- S18 waterfall ---------- */
+#s18{background:radial-gradient(ellipse at 60% 80%,#1b2320 0%,var(--ink) 60%)}
+#s18 .tiers{position:absolute;right:140px;top:110px;width:640px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;opacity:0}
+#s18 .tt{grid-column:1/-1;font-family:var(--mono);font-size:15px;letter-spacing:.16em;color:var(--skin)}
+#s18 .ti{border:1px solid var(--bone-faint);border-radius:14px;padding:14px 16px}
+#s18 .ti.hi{border-color:var(--skin);background:rgba(230,192,173,.08)}
+#s18 .ti b{display:block;font-family:var(--latin);font-weight:500;font-size:52px;line-height:1}
+#s18 .ti span{font-size:16px;color:var(--bone-dim)}
+#s18 .wf{position:absolute;inset:0}
+#s18 .wb{position:absolute;width:170px;border-radius:8px;transform-origin:bottom;transform:scaleY(0)}
+#s18 .wb.rev{background:linear-gradient(180deg,#e6c0ad,rgba(230,192,173,.55))}
+#s18 .wb.cost{background:rgba(240,231,222,.18)}
+#s18 .wb.ad{background:#b0705f}
+#s18 .wb.gm{background:linear-gradient(180deg,#93b3a1,rgba(147,179,161,.5))}
+#s18 .wb.us{background:#d4917f}
+#s18 .wb.net{background:linear-gradient(180deg,#b9d4c4,#6f9d88);box-shadow:0 0 50px rgba(147,179,161,.35)}
+#s18 .wv{position:absolute;left:50%;top:-40px;transform:translateX(-50%);font-family:var(--latin);font-weight:500;font-size:32px;white-space:nowrap;opacity:0}
+#s18 .wn{position:absolute;top:914px;width:170px;text-align:center;font-size:17px;color:var(--bone-dim);opacity:0}
+#s18 .wnote{position:absolute;right:140px;top:330px;width:640px;font-size:18px;line-height:1.7;color:var(--bone-dim);opacity:0}
+#s18 .wnote b{color:var(--sage);font-weight:500}
+
+/* ---------- S19 discount ---------- */
+#s19{background:radial-gradient(ellipse at 75% 40%,#1e2522 0%,var(--ink) 62%)}
+#s19 .tasks{position:absolute;left:140px;top:360px;width:900px;display:grid;gap:8px}
+#s19 .prog{position:relative;height:10px;border-radius:5px;background:rgba(240,231,222,.1);margin-bottom:12px}
+#s19 .prog i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:5px;background:linear-gradient(90deg,var(--rose),var(--skin))}
+#s19 .prog .pv{position:absolute;right:0;top:-34px;font-family:var(--mono);font-size:18px;color:var(--skin)}
+#s19 .tk{display:grid;grid-template-columns:40px 1fr auto;align-items:center;gap:14px;border:1px solid var(--bone-faint);border-radius:12px;padding:7px 18px;opacity:0;background:rgba(240,231,222,.02)}
+#s19 .tk.done{border-color:rgba(230,192,173,.5);background:rgba(230,192,173,.06)}
+#s19 .bx{width:24px;height:24px;border:2px solid var(--bone-dim);border-radius:6px;position:relative}
+#s19 .tk.done .bx{border-color:var(--skin);background:var(--skin)}
+#s19 .tk.done .bx::after{content:"";position:absolute;left:6px;top:1px;width:7px;height:13px;border:solid #151a18;border-width:0 3px 3px 0;transform:rotate(45deg)}
+#s19 .tk b{font-size:19px;font-weight:500}
+#s19 .tk small{display:block;font-size:14px;color:var(--bone-dim)}
+#s19 .tk .pc{font-family:var(--latin);font-size:28px;font-weight:500;color:var(--skin)}
+#s19 .price19{position:absolute;left:1140px;top:330px;width:640px;opacity:0}
+#s19 .price19 small{font-family:var(--mono);font-size:15px;letter-spacing:.2em;color:var(--bone-dim)}
+#s19 .was{font-size:24px;color:var(--bone-dim);text-decoration:line-through;margin-top:10px}
+#s19 .now{font-family:var(--latin);font-weight:500;font-size:190px;line-height:1;color:var(--bone)}
+#s19 .now em{font-style:normal;font-family:var(--display);font-size:56px;margin-left:8px}
+#s19 .ladder{display:grid;gap:8px;margin-top:20px}
+#s19 .ladder div{display:grid;grid-template-columns:1fr 100px 100px;align-items:baseline;border-top:1px solid var(--bone-faint);padding-top:10px;font-size:20px}
+#s19 .ladder s{color:var(--bone-dim);text-align:right}
+#s19 .ladder b{font-family:var(--latin);font-size:34px;font-weight:500;text-align:right}
+#s19 .ladder .hi b{color:var(--skin)}
+#s19 .price19 p{font-family:var(--display);font-size:30px;margin:22px 0 0;color:var(--skin)}
+
+/* ---------- logos ---------- */
+#s1 .logo1{position:absolute;left:52px;top:-96px;width:440px;filter:invert(1);mix-blend-mode:screen;clip-path:inset(32% 14% 33% 14%);opacity:0}
+#s14 .logos{display:flex;align-items:center;justify-content:flex-end;gap:22px;margin-bottom:10px}
+#s14 .lg-sk{width:380px;margin:-118px -50px;filter:invert(1);mix-blend-mode:screen;clip-path:inset(32% 14% 33% 14%)}
+#s14 .logos>span:not(.lg-ching){font-family:var(--latin);font-size:34px;color:var(--bone-dim)}
+#s14 .lg-ching{width:96px;height:96px;border-radius:50%;background:#f5ede6;display:grid;place-items:center;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+#s14 .lg-ching img{width:86px;height:86px;object-fit:contain}
+
+/* ---------- S21 real skin ---------- */
+#s21{background:radial-gradient(ellipse at 50% 100%,#1c2320 0%,var(--ink) 60%)}
+#s21 .hd{width:800px}
+#s21 .gal{position:absolute;left:760px;right:140px;top:110px;bottom:120px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+#s21 figure{margin:0;display:flex;flex-direction:column;min-width:0}
+#s21 .im{flex:1;border-radius:18px;background-size:auto 105%;background-repeat:no-repeat;background-position:center;clip-path:inset(100% 0 0 0 round 18px);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+#s21 figcaption{padding-top:16px;opacity:0}
+#s21 figcaption b{display:block;font-family:var(--display);font-size:34px;font-weight:500;color:var(--skin)}
+#s21 figcaption span{display:block;font-size:17px;color:var(--bone);margin-top:4px;line-height:1.5}
+#s21 figcaption em{display:block;font-style:normal;font-family:var(--mono);font-size:13px;letter-spacing:.12em;color:var(--bone-dim);margin-top:6px}
+#s21 .lede21{position:absolute;left:140px;top:460px;width:560px;opacity:0}
+#s21 .lede21 b{color:var(--bone);font-weight:500}
+
+/* ---------- S20 founder ---------- */
+#s20 .fp{position:absolute;left:0;top:0;bottom:0;width:800px;background:url(assets/brand/founder-lucy-portrait.jpg) 50% 18%/cover;opacity:0}
+#s20 .fpv{position:absolute;left:0;top:0;bottom:0;width:820px;background:linear-gradient(90deg,rgba(12,16,15,0) 55%,var(--ink) 98%)}
+#s20 .hd{left:880px;width:900px}
+#s20 .hd h2{font-size:64px}
+#s20 .cred{position:absolute;left:880px;top:400px;width:900px;display:grid;grid-template-columns:1fr 1fr;gap:14px 30px}
+#s20 .cr{opacity:0;border-top:1px solid var(--bone-faint);padding-top:12px}
+#s20 .cr b{display:block;font-family:var(--latin);font-weight:500;font-size:34px;color:var(--skin);line-height:1.1}
+#s20 .cr span{display:block;font-size:17px;color:var(--bone-dim);margin-top:4px}
+#s20 .role{position:absolute;left:880px;top:745px;width:900px;border:1px solid rgba(230,192,173,.5);border-radius:18px;padding:20px 26px;background:rgba(230,192,173,.06);display:grid;grid-template-columns:auto 1fr;gap:6px 36px;align-items:center;opacity:0}
+#s20 .role small{grid-column:1;font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--bone-dim)}
+#s20 .role b{grid-column:1;font-family:var(--display);font-size:40px;font-weight:500}
+#s20 .role ul{grid-column:2;grid-row:1 / 3;margin:0;padding:0;list-style:none;display:grid;gap:6px}
+#s20 .role li{font-size:19px;padding-left:18px;position:relative}
+#s20 .role li::before{content:"";position:absolute;left:0;top:11px;width:7px;height:7px;border-radius:50%;background:var(--skin)}
+#s20 .src{left:880px}
+@media (prefers-reduced-motion:reduce){.grain{animation:none}}
+</style>
+
+<div id="viewport"><div id="stage">
+
+<!-- S1 -->
+<section class="slide" id="s1" aria-label="封面">
+  <div class="bg"></div><div class="veil"></div>
+  <svg class="contours" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true"></svg>
+  <img class="logo1" src="assets/brand/skinora-logo.png" alt="SKINORA 膚平術PRO 標誌">
+  <div class="status">未拍板 · CANDIDATE</div>
+  <div class="copy">
+    <div class="eyebrow">SKINORA · 品牌第二曲線提案 · 2026.11</div>
+    <h1 class="split">每一道紋路，<br>都是<span class="em">愛過的痕跡</span>。</h1>
+    <div class="rule"></div>
+    <p class="tagline">SKINORA 陪你溫柔地，重新喜歡自己的樣子。</p>
+    <div class="sub">B2C 第二曲線提案 ｜ 年營收 <b>3,000</b> 萬的路徑</div>
+  </div>
+  <div class="src">靜享美學事業有限公司 · 品牌行銷顧問合作提案</div>
+</section>
+
+<!-- S2 -->
+<section class="slide" id="s2" aria-label="她想買，卻找不到門">
+  <div class="bg"></div><div class="veil"></div>
+  <div class="tag eyebrow">01 · 消費者的入口</div>
+  <div class="lines">
+    <div class="line">深夜，她搜尋「<span class="k">膚平術 價格</span>」。</div>
+    <div class="line">第一個結果，<span class="k">不是你</span>。</div>
+    <div class="line">點進官方預約頁：<span class="k">查無可預約資料</span>。</div>
+  </div>
+  <div class="phone"><div class="notch"></div><div class="screen">
+    <div class="sbar"></div>
+    <div class="search"><i></i><span class="q"></span><span class="caret"></span></div>
+    <div class="results">
+      <div class="res first"><small>instagram.com › 其他業者</small><b>✨膚平術價目表出爐✨ 妊娠紋、肥胖紋…</b><span class="who">不是 SKINORA</span></div>
+      <div class="res"><small>homebeauty.com.tw</small><b>法式永膚｜體驗價單堂 $11,000</b></div>
+      <div class="res"><small>shogin1115.bvshop.tw</small><b>SKINORA膚平術pro｜肌膚紋理調理服務</b></div>
+    </div>
+    <div class="booking">
+      <div class="hd">靜享美學證照學院</div>
+      <div class="tt">SKINORA膚平術pro｜<br>肌膚紋理調理服務</div>
+      <div class="cal"></div>
+      <div class="empty">查無可預約資料</div>
+    </div>
+  </div></div>
+  <div class="takeaway"><b>需求已經存在，入口是斷的。</b>官方服務頁沒有價格、沒有時段，也沒有特約店地圖。</div>
+  <div class="src">情境示意 ｜ 實查 2026-11-22：Google 台灣搜尋、BVSHOP 服務頁</div>
+</section>
+
+
+<!-- S21 real skin -->
+<section class="slide" id="s21" aria-label="她在意的紋路">
+  <div class="hd">
+    <div class="eyebrow">02 · 她在意的紋路</div>
+    <h2 class="split">她在意的，<br>是<span class="em">這樣的紋路</span>。</h2>
+  </div>
+  <p class="lede lede21">她不需要被說服紋路存在。<br>她想知道的是：<b>找誰、要花多少、安不安全。</b></p>
+  <div class="gal">
+    <figure class="pn1"><div class="im" style="background-image:url(assets/brand/pregnancy-stretch-marks-reference.jpg)"></div><figcaption><b>妊娠紋</b><span>產後半年到數年・競品素材 43% 在搶</span><em>品牌官網參考照</em></figcaption></figure>
+    <figure class="pn1"><div class="im" style="background-image:url(assets/brand/growth-stretch-marks-reference.jpg)"></div><figcaption><b>生長紋</b><span>青春期、重訓・只有 3% 的素材在經營</span><em>品牌官網參考照</em></figcaption></figure>
+    <figure class="pn1"><div class="im" style="background-image:url(assets/skin_thigh_weightloss.jpg);background-position:56% 50%"></div><figcaption><b>肥胖紋</b><span>減重之後・瘦瘦針討論 +110%</span><em>AI 生成示意</em></figcaption></figure>
+  </div>
+  <div class="src">參考照取自品牌官網 lucy-skinora.com；第三張為 AI 生成示意 ｜ 皆為紋路類型示意，非效果對比</div>
+</section>
+
+<!-- S3 -->
+<section class="slide" id="s3" aria-label="客群在移動">
+  <div class="gym"><div class="gymveil"></div></div>
+  <div class="head">
+    <div class="eyebrow">03 · 市場正在移動</div>
+    <h2 class="split">媽媽變少了，<br>廣告卻<span class="em">全擠在媽媽身上</span>。</h2>
+  </div>
+  <div class="births">
+    <div><span class="num">0</span><span class="delta">年減約 20%</span></div>
+    <div class="cap">2025 年全台出生數，連續第十年創新低</div>
+  </div>
+  <div class="field" aria-hidden="true"></div>
+  <div class="lab mom" style="left:772px;top:440px"><b>46</b>則打媽咪、孕期</div>
+  <div class="lab other" style="left:1022px;top:440px"><b>57</b>則其他訴求</div>
+  <div class="lab fit" style="left:1332px;top:440px"><b>3</b>則打男性、健身</div>
+  <div class="punch">下一群人，在健身房。<small>生長紋族群幾乎沒有人經營。<br>減重熱潮讓「瘦下來之後」成為新的切入點。</small></div>
+  <div class="src">內政部 2025 人口統計（中央社 2026-01-09）｜競品廣告雷達：106 則身體紋路廣告，Meta 廣告檔案庫 2026-11-22</div>
+</section>
+
+<!-- S4 -->
+<section class="slide" id="s4" aria-label="你的名字在別人手上">
+  <div class="head">
+    <div class="eyebrow">04 · 競品廣告雷達</div>
+    <h2 class="split">你的名字，<br><span class="em">正在別人手上</span>。</h2>
+  </div>
+  <div class="facts">
+    <div class="fact"><b>0</b><span>SKINORA 總部目前刊登中的 Meta 廣告</span></div>
+    <div class="fact rose"><b>3</b><span>用 SKINORA／膚平術名義投放的學員或特約帳號，其中一則寫著<q>一勞永逸</q></span></div>
+    <div class="fact"><b>283</b><span>天。消費者端最長青的工作室素材，靠的是共感，不是對比圖</span></div>
+  </div>
+  <div class="radar" aria-hidden="true">
+    <div class="ring" style="inset:0"></div><div class="ring" style="inset:112px"></div><div class="ring" style="inset:225px"></div><div class="ring" style="inset:337px"></div>
+    <div class="axis"></div><div class="axis h"></div>
+    <div class="sweep"></div>
+    <div class="core"><div><b>0</b><small>SKINORA 總部</small></div></div>
+  </div>
+  <div class="legend"><span><i style="background:var(--rose)"></i>用 SKINORA 名義投放</span><span><i style="background:var(--sage)"></i>直接競品</span><span>標示數字 = 已投放天數</span></div>
+  <div class="src">競品廣告雷達 · Meta 廣告檔案庫（台灣、刊登中）2026-11-22 · 檔案庫不提供花費與成效</div>
+</section>
+
+<!-- S5 -->
+<section class="slide" id="s5" aria-label="兩條曲線">
+  <div class="bg"></div><div class="veil"></div>
+  <div class="head">
+    <div class="eyebrow">05 · 3,000 萬怎麼來</div>
+    <h2 class="split">3,000 萬，<br>全部來自<span class="em">消費者</span>。</h2>
+  </div>
+  <div class="total"><small>年營收目標（估算）</small><b><span class="tn">0</span><em>萬</em></b></div>
+  <svg class="curves" viewBox="0 0 1920 1080" aria-hidden="true">
+    <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6c0ad" stop-opacity=".16"/><stop offset=".7" stop-color="#e6c0ad" stop-opacity="0"/></linearGradient></defs>
+    <path class="c1" d="M140 800 C 420 790, 560 640, 760 600 S 1100 585, 1300 600 S 1640 640, 1780 660"/>
+    <path class="a2" d="M760 820 C 980 815, 1080 760, 1220 640 S 1520 380, 1780 330 L 1780 330 C 1700 600, 1500 820, 1300 820 Z"/>
+    <path class="c2" d="M760 820 C 980 815, 1080 760, 1220 640 S 1520 380, 1780 330"/>
+  </svg>
+  <div class="cl one" style="left:240px;top:430px"><small>第一曲線 · 既有 B2B</small><b>另計</b><span>課程＋耗材，不列入本案目標</span></div>
+  <div class="cl two" style="left:1000px;top:360px"><small>第二曲線 · B2C</small><b>4 條收入</b><span>直營、全台平台、居家訂閱、年度會員</span></div>
+  <div class="parts">
+    <div class="part"><div><small>直營旗艦療程</small><b>1,320<em>萬</em></b></div></div>
+    <div class="part"><div><small>全台履約平台（總部收款）</small><b>660<em>萬</em></b></div></div>
+    <div class="part has-thumb"><div class="thumb" role="img" aria-label="居家照護產品示意"></div><div><small>居家照護訂閱</small><b>720<em>萬</em></b></div></div>
+    <div class="part"><div><small>年度保養會員</small><b>300<em>萬</em></b></div></div>
+  </div>
+  <div class="src">估算 ｜ 平均療程實收 55,000（牌價加權約 58,900）｜ 平台營收為總額，約 55% 支付特約店履約 ｜ 未拍板（candidate）</div>
+</section>
+
+
+
+<!-- S15 pricing (sits after S5) -->
+<section class="slide" id="s15" aria-label="高標定價">
+  <div class="hd">
+    <div class="eyebrow">06 · 高標定價</div>
+    <h2 class="split">價格站在高標，<br>因為我們賣的是<span class="em">安心</span>。</h2>
+  </div>
+  <p class="lede l15">全台同一套標準、創辦人訂定流程、事前透明評估、療程後陪跑，都是小工作室給不了的。</p>
+  <div class="axis15"><div class="tk15" style="left:600px"><i></i><span>0</span></div><div class="tk15" style="left:967px"><i></i><span>5 萬</span></div><div class="tk15" style="left:1333px"><i></i><span>10 萬</span></div><div class="tk15" style="left:1700px"><i></i><span>15 萬</span></div></div>
+  <div class="pr-row" style="top:430px"><div class="pl">工作室體驗價／模特兒價</div><div class="rg " style="left:640px;width:40px"><span>5,500–11,000</span></div></div>
+<div class="pr-row" style="top:522px"><div class="pl">非醫療工作室正價（整個療程）</div><div class="rg " style="left:717px;width:396px"><span>16,000–70,000</span></div></div>
+<div class="pr-row" style="top:614px"><div class="pl">醫美療程組合（3–6 次）</div><div class="rg med" style="left:820px;width:880px"><span>30,000–150,000</span></div></div>
+<div class="pr-row sk" style="top:706px"><div class="pl">SKINORA 本案定價</div><div class="rg sk" style="left:864px;width:455px"><span>36,000–98,000</span></div></div>
+<div class="mk" style="left:864px;top:760px"><b>3.6 萬</b><i></i></div><div class="mk" style="left:1025px;top:760px"><b>5.8 萬</b><i></i></div><div class="mk" style="left:1245px;top:760px"><b>8.8 萬</b><i></i></div>
+  <div class="prices">
+    <div class="pc"><small>到店評估＋試作</small><b>3,800</b><span>可折抵療程</span></div>
+    <div class="pc"><small>小範圍療程</small><b>36,000</b><span>3 次</span></div>
+    <div class="pc hi"><small>中範圍療程</small><b>58,000</b><span>3–4 次・主力</span></div>
+    <div class="pc"><small>大範圍療程</small><b>88,000<em>起</em></b><span>4–5 次</span></div>
+    <div class="pc"><small>居家照護</small><b>3,600</b><span>每月・療程客 2,980</span></div>
+    <div class="pc"><small>年度保養會員</small><b>36,000</b><span>每年・季度維護</span></div>
+  </div>
+  <div class="src">對照：宅美美業、AC STUDIO、u.me studio、Dcard 心得整理、依美琦與粹究診所（2026）｜ SKINORA 定價與 Lucy 親自操作 +30% 皆為 candidate，需經合規審閱</div>
+</section>
+
+
+<!-- S20 founder -->
+<section class="slide" id="s20" aria-label="創辦人">
+  <div class="fp"></div><div class="fpv"></div>
+  <div class="hd">
+    <div class="eyebrow">07 · 安心的來源</div>
+    <h2 class="split">安心的來源，<br>是一個<span class="em">訂標準的人</span>。</h2>
+  </div>
+  <div class="cred">
+    <div class="cr"><b>ISO 17024</b><span>英國皮紋修復國際考官及導師</span></div>
+    <div class="cr"><b>2026</b><span>CBC 國際美業競賽・國際皮紋修護總召</span></div>
+    <div class="cr"><b>2026</b><span>國際亞太盃・國際皮紋修復總召</span></div>
+    <div class="cr"><b>北科大</b><span>推廣教育中心・美業創業講師</span></div>
+    <div class="cr"><b>乙・丙級</b><span>國家證照・美容技術</span></div>
+    <div class="cr"><b>常務委員</b><span>台灣職工教育和職業培訓協會</span></div>
+  </div>
+  <div class="role"><small>對消費者的角色</small><b>首席技術總監</b><ul><li>訂定全台同一套評估與流程</li><li>每月 1 支長片＋每週 2 段口播</li><li>親自操作療程，溢價 +30%</li></ul></div>
+  <div class="src">簡靜宜 Lucy・SKINORA 創辦人 ｜ 資歷為品牌官網自述，對外使用前需逐項查證 ｜ 照片取自品牌官網</div>
+</section>
+
+<!-- S6 journey -->
+<section class="slide" id="s6" aria-label="她的下一次搜尋">
+  <div class="bg"></div><div class="veil"></div>
+  <div class="hd">
+    <div class="eyebrow">08 · 第二曲線長什麼樣子</div>
+    <h2 class="split">她的下一次搜尋，<br>應該<span class="em">這樣結束</span>。</h2>
+  </div>
+  <div class="tl">
+    <div class="rail"><i></i></div>
+    <div class="step" style="top:0"><div class="d"><small>DAY</small>0</div><div class="p"></div><div><b>傳一張照片</b><span>AI 5 分鐘內回應，真人 24 小時內評估次數與費用</span></div></div>
+    <div class="step" style="top:110px"><div class="d"><small>DAY</small>1</div><div class="p"></div><div><b>就近的特約店接手</b><span>依縣市自動分派，全台同一套評估和流程</span></div></div>
+    <div class="step" style="top:220px"><div class="d"><small>DAY</small>7</div><div class="p"></div><div><b>第一次療程</b><span>事前說清楚：適合誰、幾次、多少錢、不做什麼</span></div></div>
+    <div class="step prod" style="top:330px"><div class="d"><small>DAY</small>21</div><div class="p"></div><div><b>居家照護自動補貨</b><span>療程＋居家，第二曲線的訂閱收入從這裡開始</span></div></div>
+    <div class="step" style="top:440px"><div class="d"><small>DAY</small>90</div><div class="p"></div><div><b>她的療程日記，成為下一個人的入口</b><span>授權 UGC、Google 評價、轉介紹</span></div></div>
+  </div>
+  <div class="src">情境示意 ｜ 流程與時效為規劃目標（candidate），需依實際人力與特約店回覆時效校正</div>
+</section>
+
+<!-- S7 funnel -->
+<section class="slide" id="s7" aria-label="漏斗">
+  <div class="bg"></div><div class="veil"></div>
+  <div class="hd">
+    <div class="eyebrow">09 · 漏斗（全速期每月）</div>
+    <h2 class="split">195 萬次曝光，<br>收成 <span class="em">46 位</span>高單價新客。</h2>
+  </div>
+  <div class="cols">
+    <div class="col"><div class="v" data-n="195" data-unit="萬">0</div><div class="bar" data-h="423"></div><div class="l">曝光<small>付費 165 萬＋自然 30 萬</small></div><div class="rate">0.7%</div></div>
+    <div class="col"><div class="v" data-n="1.4" data-dec="1" data-unit="萬">0</div><div class="bar" data-h="252"></div><div class="l">點擊<small>名單廣告、Google、自然</small></div><div class="rate">10%</div></div>
+    <div class="col"><div class="v" data-n="1410">0</div><div class="bar" data-h="172"></div><div class="l">LINE 名單<small>付費 1,010＋自然 400</small></div><div class="rate">18%</div></div>
+    <div class="col"><div class="v" data-n="254">0</div><div class="bar" data-h="112"></div><div class="l">照片評估<small>AI 分類＋真人回覆</small></div><div class="rate">18%</div></div>
+    <div class="col"><div class="v" data-n="46">0</div><div class="bar" data-h="56"></div><div class="l">新療程<small>均價 5.5 萬・直營 31＋平台 15</small></div></div>
+    <div class="col ret"><div class="v" data-n="330">0</div><div class="bar" data-h="121"></div><div class="l">居家訂閱<small>月 3,600・留存回購</small></div></div>
+  </div>
+  <div class="src">估算：M10–M12 每月 ｜ 各層單位成本與分期目標見「廣告效益量化」頁；所有轉換率需於測試期校正</div>
+</section>
+
+<!-- S8 flywheel -->
+<section class="slide" id="s8" aria-label="飛輪">
+  <div class="hd">
+    <div class="eyebrow">10 · 飛輪</div>
+    <h2 class="split">每轉一圈，<br>獲客成本<span class="em">就更低</span>。</h2>
+  </div>
+  <div class="pts">
+    <div class="pt"><b>最好的療程日記，變成下一支廣告</b><span>真實顧客授權的素材，比任何棚拍都可信</span></div>
+    <div class="pt"><b>每一則評價，都在推高「附近的店」</b><span>特約店的 Google 商家，就是實體可得性</span></div>
+    <div class="pt"><b>每一位會員，都在拉高客戶終身價值</b><span>療程 → 居家訂閱 → 年度會員，一位顧客不只買一次</span></div>
+  </div>
+  <svg class="wheel" viewBox="0 0 1000 900" aria-hidden="true">
+    <defs><linearGradient id="gflow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d4917f" stop-opacity="0"/><stop offset="1" stop-color="#e6c0ad"/></linearGradient></defs>
+    <circle class="ticks" cx="400" cy="450" r="340"/>
+    <circle class="ring" cx="400" cy="450" r="300"/>
+    <circle class="flow" cx="400" cy="450" r="300" transform="rotate(-90 400 450)"/>
+    <path class="ring2" d="M 430 752 C 560 762, 640 762, 725 760" stroke-dasharray="6 8"/>
+    <circle class="ring2" cx="820" cy="760" r="95"/>
+    <circle class="flow2" cx="820" cy="760" r="95"/>
+  </svg>
+  <div class="node" style="left:1270px;top:260px"><i></i><b>內容</b><span>知識＋真實旅程</span></div>
+  <div class="node" style="left:1570px;top:560px"><i></i><b>LINE 名單</b><span>AI 分類、自動分派</span></div>
+  <div class="node" style="left:1270px;top:860px"><i></i><b>成交</b><span>旗艦店＋特約店</span></div>
+  <div class="node" style="left:970px;top:560px"><i></i><b>證據資產</b><span>療程日記、評價</span></div>
+  <div class="node g" style="left:1690px;top:845px"><b>附帶效益</b><span>特約店更多</span></div>
+  <div class="center"><small>每轉一圈</small><b>獲客成本 <em>↓</em></b></div>
+</section>
+
+<!-- S9 AI hub -->
+<section class="slide" id="s9" aria-label="AI 中樞">
+  <div class="bg"></div><div class="veil"></div>
+  <div class="hd">
+    <div class="eyebrow">11 · AI 自動化中樞</div>
+    <h2 class="split">一個 LINE，<br>接住<span class="em">全台的詢問</span>。</h2>
+  </div>
+  <svg class="net" viewBox="0 0 1920 1080" aria-hidden="true"></svg>
+  <div class="in" style="top:440px"><small>留言【評估】</small><b>上傳照片評估</b></div>
+  <div class="in" style="top:610px"><small>留言【價格】</small><b>價目與次數說明</b></div>
+  <div class="in g" style="top:780px"><small>留言【補貨】</small><b>居家照護與會員</b></div>
+  <div class="halo"></div>
+  <div class="hub"><div><b>AI</b><span>分類＋貼標籤</span><small>5 分鐘內回應</small></div></div>
+  <div class="out" style="top:400px"><i></i><div><b>北區特約店</b><span>依縣市自動分派</span></div></div>
+  <div class="out" style="top:515px"><i></i><div><b>中區特約店</b><span>24 小時未回覆自動轉派</span></div></div>
+  <div class="out" style="top:630px"><i></i><div><b>南區特約店</b><span>同一套評估表</span></div></div>
+  <div class="out" style="top:745px"><i></i><div><b>總部旗艦</b><span>Lucy＋總部美容師</span></div></div>
+  <div class="out g" style="top:860px"><i></i><div><b>居家訂閱＋會員</b><span>第 21 天自動補貨提醒</span></div></div>
+  <div class="rule9"><b>合規界線</b>AI 只做分類與衛教，不判斷、不保證效果；身體照片取得同意並加密存放</div>
+</section>
+
+<!-- S10 creative engine -->
+<section class="slide" id="s10" aria-label="素材引擎">
+  <div class="hd">
+    <div class="eyebrow">12 · 素材引擎</div>
+    <h2 class="split">6 種開場，<br>每月 <span class="em">12–16 支</span>新素材。</h2>
+  </div>
+  <div class="stats">
+    <div class="st"><b>17 天</b><span>競品服務類素材的投放中位數，2–3 週就要換新</span></div>
+    <div class="st"><b>62%</b><span>紋路類廣告是影片；我們的配比：影片 60%、輪播 25%、單圖 15%</span></div>
+    <div class="st"><b>1 → 10</b><span>AI 內容工廠：1 支 Lucy 長片拆成 8–10 支短片與輪播</span></div>
+  </div>
+  <div class="feed" aria-hidden="true"><div class="colf"></div><div class="colf"></div><div class="colf"></div></div>
+  <div class="draft">廣告文案皆為草稿 · 上線前需法規審稿</div>
+</section>
+
+<!-- S11 dual engines -->
+<section class="slide" id="s11" aria-label="自然流量與廣告">
+  <div class="hd">
+    <div class="eyebrow">13 · 自然流量 × 廣告</div>
+    <h2 class="split">自然流量打底，<br>廣告<span class="em">負責加速</span>。</h2>
+  </div>
+  <div class="legend11"><span><i style="background:var(--rose)"></i>廣告預算（萬／月）</span><span><i style="background:var(--sage)"></i>自然流量帶來的 LINE 名單（人／月）</span></div>
+  <svg class="dual" viewBox="0 0 1640 470" aria-hidden="true"></svg>
+  <div class="chips">
+    <div class="chip"><b>IG Reels＋輪播</b><span>每週 3＋2 則，結尾留言觸發</span></div>
+    <div class="chip"><b>Threads</b><span>Lucy 第一人稱，每日海巡</span></div>
+    <div class="chip"><b>SEO 文章</b><span>每月 4 篇，含品牌字防守</span></div>
+    <div class="chip"><b>Google 商家</b><span>每家特約店一個，邀請評價</span></div>
+    <div class="chip"><b>特約素材包</b><span>每月一包，合規文案</span></div>
+  </div>
+  <div class="src">估算 ｜ 停損：素材花滿 3,000 元、名單成本高於目標 1.5 倍即停；勝出素材每 3 天加碼 20%</div>
+</section>
+
+
+<!-- S16 ad mix -->
+<section class="slide" id="s16" aria-label="廣告配置">
+  <div class="hd">
+    <div class="eyebrow">14 · 廣告配置與預算</div>
+    <h2 class="split">貼文、名單、轉換，<br>每一塊錢都有<span class="em">任務</span>。</h2>
+  </div>
+  <div class="tot16"><small>全年廣告預算</small><b>272<em>萬</em></b><span>B2C 營收的 9.1%・全速期每月 30 萬</span></div>
+  <div class="ph" style="top:392px"><div class="pn"><b>測試</b>M1–M3<small>合計 37 萬</small></div><div class="pbar"><div class="sg post" style="flex:30">30%</div><div class="sg lead" style="flex:35">35%</div><div class="sg goog" style="flex:15">15%</div><div class="sg rt" style="flex:5"></div><div class="sg test" style="flex:15">15%</div></div></div>
+<div class="ph" style="top:480px"><div class="pn"><b>放量</b>M4–M8<small>合計 117 萬</small></div><div class="pbar"><div class="sg post" style="flex:22">22%</div><div class="sg lead" style="flex:35">35%</div><div class="sg goog" style="flex:20">20%</div><div class="sg rt" style="flex:10">10%</div><div class="sg shop" style="flex:8">8%</div><div class="sg test" style="flex:5"></div></div></div>
+<div class="ph" style="top:568px"><div class="pn"><b>收成</b>M9–M12<small>合計 118 萬</small></div><div class="pbar"><div class="sg post" style="flex:20">20%</div><div class="sg lead" style="flex:33">33%</div><div class="sg goog" style="flex:20">20%</div><div class="sg rt" style="flex:10">10%</div><div class="sg shop" style="flex:10">10%</div><div class="sg test" style="flex:7"></div></div></div>
+
+  <div class="cards16"><div class="ac post"><i></i><small>觸及＋影片觀看</small><b>貼文廣告</b><div class="amt">6<em>萬／月</em></div><div class="yr">全年 60 萬・22%</div><p>讓 18–45 歲的人認識 SKINORA，累積再行銷受眾</p><div class="kpi16">CPM ≤100・完整觀看 ≥15%</div></div><div class="ac lead"><i></i><small>LINE 訊息＋留言觸發</small><b>名單廣告</b><div class="amt">10<em>萬／月</em></div><div class="yr">全年 93 萬・34%</div><p>拿到 LINE 好友與照片評估</p><div class="kpi16">CPL ≤170</div></div><div class="ac goog"><i></i><small>高意圖字＋品牌字</small><b>Google 搜尋</b><div class="amt">6<em>萬／月</em></div><div class="yr">全年 53 萬・19%</div><p>攔截「妊娠紋 改善 台中」這類搜尋</p><div class="kpi16">CPC ≤25・轉名單 ≥8%</div></div><div class="ac rt"><i></i><small>療程預約</small><b>再行銷</b><div class="amt">3<em>萬／月</em></div><div class="yr">全年 25 萬・9%</div><p>把看過影片、加了好友沒預約的人帶回來</p><div class="kpi16">評估成本 ≤1,200</div></div><div class="ac shop"><i></i><small>購物＋目錄廣告</small><b>居家轉換</b><div class="amt">3<em>萬／月</em></div><div class="yr">全年 21 萬・8%</div><p>賣居家照護組與訂閱</p><div class="kpi16">ROAS ≥3.5</div></div><div class="ac test"><i></i><small>新切角小額測試</small><b>素材測試</b><div class="amt">2<em>萬／月</em></div><div class="yr">全年 20 萬・7%</div><p>每週測 3–4 支新素材</p><div class="kpi16">命中率 ≥25%</div></div></div>
+  <div class="src">預算比重為建議（candidate）｜ 測試期先不投居家轉換，產品上市後開啟 ｜ 每月依 KPI 重新分配</div>
+</section>
+
+<!-- S17 ad KPI -->
+<section class="slide" id="s17" aria-label="廣告效益量化">
+  <div class="hd">
+    <div class="eyebrow">15 · 廣告效益量化</div>
+    <h2 class="split">每一層漏斗，<br>都有一個<span class="em">要盯的數字</span>。</h2>
+  </div>
+  <div class="ly" style="top:360px;width:860px;left:140px"><div class="lt"><b>曝光</b><small>付費 165 萬＋自然 30 萬</small></div><div class="lv">195 萬</div><div class="lk">CPM ≤140</div></div>
+<div class="ly" style="top:460px;width:768px;left:186px"><div class="lt"><b>點擊</b><small>名單廣告、Google、自然</small></div><div class="lv">1.4 萬</div><div class="lk">連結 CTR ≥1.2%</div></div>
+<div class="ly" style="top:560px;width:676px;left:232px"><div class="lt"><b>LINE 名單</b><small>付費 1,010＋自然 400</small></div><div class="lv">1,410</div><div class="lk">CPL ≤170</div></div>
+<div class="ly" style="top:660px;width:584px;left:278px"><div class="lt"><b>照片評估</b><small>名單的 18%</small></div><div class="lv">254</div><div class="lk">評估成本 ≤1,200</div></div>
+<div class="ly" style="top:760px;width:492px;left:324px"><div class="lt"><b>新療程</b><small>評估的 18%</small></div><div class="lv">46</div><div class="lk">CPA ≤6,000</div></div>
+<div class="ly" style="top:860px;width:400px;left:370px"><div class="lt"><b>療程營收</b><small>46 × 55,000</small></div><div class="lv">253 萬</div><div class="lk">ROAS ≥9</div></div>
+
+  <div class="kt"><div class="kth">分期 KPI 目標</div><table><thead><tr><th>指標</th><th>測試 M1–3</th><th>放量 M4–8</th><th>收成 M9–12</th></tr></thead><tbody><tr><td>CPM</td><td>≤180</td><td>≤150</td><td class="hl">≤140</td></tr><tr><td>連結 CTR</td><td>≥0.9%</td><td>≥1.1%</td><td class="hl">≥1.2%</td></tr><tr><td>CPL（每位 LINE 名單）</td><td>≤250</td><td>≤200</td><td class="hl">≤170</td></tr><tr><td>照片評估成本</td><td>≤1,600</td><td>≤1,300</td><td class="hl">≤1,200</td></tr><tr><td>新療程 CPA</td><td>≤9,000</td><td>≤7,000</td><td class="hl">≤6,000</td></tr><tr><td>療程 ROAS</td><td>≥5</td><td>≥7</td><td class="hl">≥9</td></tr><tr><td>居家 ROAS</td><td>—</td><td>≥2.5</td><td class="hl">≥3.5</td></tr></tbody></table>
+  <p class="kn">療程 ROAS＝療程營收 ÷ 療程廣告費（全速期每月 27 萬）。含自然流量帶動約 9.4；只算付費歸因約 6.7。</p></div>
+  <div class="src">估算：M10–M12 每月 ｜ 停損：素材花滿 3,000 元、CPL 高於目標 1.5 倍即停；勝出素材每 3 天加碼 20%</div>
+</section>
+
+<!-- S12 90 days -->
+<section class="slide" id="s12" aria-label="前 90 天">
+  <div class="hd">
+    <div class="eyebrow">16 · 前 90 天</div>
+    <h2 class="split">前 90 天，<br>先把<span class="em">門修好</span>。</h2>
+  </div>
+  <div class="gantt">
+    <div class="wk"><span></span><span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span><span>W7</span><span>W8</span><span>W9</span><span>W10</span><span>W11</span><span>W12</span><span>W13</span></div>
+    <div class="row"><div class="nm">地基<small>合規健檢・用語白名單・特約規範</small></div><div class="bar" style="grid-column:2 / 4">合規</div></div>
+    <div class="row"><div class="nm">承接<small>落地頁・找店地圖・LINE 自動化</small></div><div class="bar" style="grid-column:4 / 8">入口上線</div></div>
+    <div class="row"><div class="nm">內容引擎<small>首批 18 支素材・SEO 6–8 篇</small></div><div class="bar" style="grid-column:6 / 12">每週產出</div></div>
+    <div class="row"><div class="nm">廣告測試<small>3 組受眾 × 6 種切角</small></div><div class="bar g" style="grid-column:8 / 12">建立基準</div></div>
+    <div class="row"><div class="nm">優化放量<small>加碼勝出・轉介紹・月報</small></div><div class="bar g" style="grid-column:12 / 15">放量</div></div>
+    <div class="today"></div>
+  </div>
+  <div class="check"><small>DAY 90 驗收</small><b>三件事</b><ul><li>落地頁、找店地圖、LINE 自動化全部上線</li><li>每月新增 LINE 好友 800 以上</li><li>建立評估到成交的基準數據</li></ul></div>
+</section>
+
+<!-- S13 engagement -->
+<section class="slide" id="s13" aria-label="合作方案">
+  <div class="hd">
+    <div class="eyebrow">17 · 合作方案</div>
+    <h2 class="split">三種合作深度，<br>每一項都<span class="em">算得出來</span>。</h2>
+  </div>
+  <div class="plans"><div class="plan "><small>PLAN A</small><h3>顧問陪跑</h3><div class="pr">6<em>萬／月 牌價</em></div><div class="fl">任務全達成最低 <b>3 萬</b></div><ul><li>策略會議 4 次／月（每次 90 分鐘）</li><li>KPI 儀表板每週更新</li><li>文案與素材審閱 ≤20 則／月</li><li>廣告帳戶健檢 2 次／月</li><li>月報 1 份</li></ul><div class="eff"><b>效益</b>第 6 個月：LINE 名單 ≥500／月、新療程 ≥15／月</div></div><div class="plan "><small>PLAN B</small><h3>顧問＋執行</h3><div class="pr">12<em>萬／月 牌價</em></div><div class="fl">任務全達成最低 <b>6 萬</b></div><ul><li>會議 4–8 次／月</li><li>IG 12 則＋Reels 8 支、Threads 20 則</li><li>SEO 文章 4 篇</li><li>廣告素材 12 支＋6 類廣告代投（≤30 萬）</li><li>LINE 自動化 6 條序列＋AI 初評</li><li>週報 4 份＋月報 1 份</li></ul><div class="eff"><b>效益</b>第 10–12 個月：LINE 名單 1,410／月、新療程 46／月、B2C 月營收 340–410 萬</div></div><div class="plan rec"><span class="badge">推薦</span><small>PLAN C</small><h3>全案</h3><div class="pr">20<em>萬／月 牌價</em></div><div class="fl">任務全達成最低 <b>10 萬</b></div><ul><li>B 方案全部內容</li><li>拍攝日 2 天／月：長片 2、短片 16、照片 60</li><li>KOC 合作 4 位／月</li><li>8 家特約店 Google 商家＋素材包</li><li>居家產品上市企劃</li></ul><div class="eff"><b>效益</b>B 的全部＋居家訂閱 330 筆／月、年度會員 84 位、平台履約 15 位／月</div></div></div>
+  <div class="src">遠端執行＋每週 1–2 次會議 ｜ 價格為每月、未稅；廣告預算另付 ｜ 開辦費 15 萬 ｜ 全部為未拍板（candidate）</div>
+</section>
+
+
+<!-- S18 profit share -->
+<section class="slide" id="s18" aria-label="分潤">
+  <div class="hd">
+    <div class="eyebrow">18 · 分潤結構</div>
+    <h2 class="split">分潤 20–40%，<br>只分<span class="em">你真的賺到的錢</span>。</h2>
+  </div>
+  <div class="tiers"><div class="tt">分潤基礎：B2C 廣告後貢獻毛利</div>
+    <div class="ti"><b>20%</b><span>0～500 萬</span></div><div class="ti"><b>30%</b><span>500～1,000 萬</span></div><div class="ti hi"><b>40%</b><span>1,000 萬以上</span></div></div>
+  <div class="wf"><div class="wb rev" style="left:170px;top:460px;height:440px"><span class="wv">3,000</span></div><div class="wn" style="left:170px">B2C 營收</div>
+<div class="wb cost" style="left:398px;top:460px;height:183px"><span class="wv">−1,247</span></div><div class="wn" style="left:398px">直接成本</div>
+<div class="wb ad" style="left:626px;top:643px;height:40px"><span class="wv">−272</span></div><div class="wn" style="left:626px">廣告預算</div>
+<div class="wb gm" style="left:854px;top:683px;height:217px"><span class="wv">1,481</span></div><div class="wn" style="left:854px">廣告後貢獻毛利</div>
+<div class="wb us" style="left:1082px;top:683px;height:65px"><span class="wv">−443</span></div><div class="wn" style="left:1082px">我方分潤</div>
+<div class="wb us" style="left:1310px;top:748px;height:20px"><span class="wv">−135</span></div><div class="wn" style="left:1310px">我方月費＋開辦</div>
+<div class="wb net" style="left:1538px;top:768px;height:132px"><span class="wv">903</span></div><div class="wn" style="left:1538px">品牌方淨增益</div>
+</div>
+  <div class="wnote">以方案 C、任務全達成（每月 10 萬）試算：我方全年約 578 萬（營收的 19.3%），<b>品牌方保留 903 萬淨增益</b>。<br>若改以營收計 20–40%，會吃掉 B2C 毛利（58%）的一半以上，品牌方容易虧損，所以不建議。</div>
+  <div class="src">單位：萬元 ｜ 直接成本＝美容師與耗材 40%、特約店履約款 57%、居家產品成本 33%、會員服務 35% ｜ 估算，未拍板（candidate）</div>
+</section>
+
+<!-- S19 discount missions -->
+<section class="slide" id="s19" aria-label="合作價格">
+  <div class="hd">
+    <div class="eyebrow">19 · 合作價格</div>
+    <h2 class="split">最低 5 折，<br>用<span class="em">任務</span>換折扣。</h2>
+  </div>
+  <div class="tasks"><div class="prog"><i></i><span class="pv">0%</span></div><div class="tk" data-p="10"><i class="bx"></i><div><b>簽約 12 個月</b><small>合約</small></div><span class="pc">−10%</span></div><div class="tk" data-p="5"><i class="bx"></i><div><b>季繳預付月費</b><small>每季初付款</small></div><span class="pc">−5%</span></div><div class="tk" data-p="10"><i class="bx"></i><div><b>開放數據權限</b><small>Meta、LINE、預約／POS 後台＋每週營收對帳</small></div><span class="pc">−10%</span></div><div class="tk" data-p="10"><i class="bx"></i><div><b>創辦人拍攝配合</b><small>每月 1 天拍攝日＋每週 2 段口播</small></div><span class="pc">−10%</span></div><div class="tk" data-p="5"><i class="bx"></i><div><b>顧客案例授權</b><small>每月 ≥4 位書面授權療程日記</small></div><span class="pc">−5%</span></div><div class="tk" data-p="5"><i class="bx"></i><div><b>特約店接入平台</b><small>≥6 家接入履約平台與素材包</small></div><span class="pc">−5%</span></div><div class="tk" data-p="5"><i class="bx"></i><div><b>案例公開與轉介紹</b><small>同意發表成果，每年轉介 1 個品牌</small></div><span class="pc">−5%</span></div></div>
+  <div class="price19">
+    <small>方案 C 全案・每月</small>
+    <div class="was">牌價 20 萬</div>
+    <div class="now"><span class="nv">20</span><em>萬</em></div>
+    <div class="ladder">
+      <div><span>方案 A</span><s>6 萬</s><b>3 萬</b></div>
+      <div><span>方案 B</span><s>12 萬</s><b>6 萬</b></div>
+      <div class="hi"><span>方案 C</span><s>20 萬</s><b>10 萬</b></div>
+    </div>
+    <p>用 B 的價格，拿到 C 的內容。</p>
+  </div>
+  <div class="src">折扣上限 50% ｜ 每月檢核：當月未達成的任務，次月暫停該項折扣 ｜ 分潤比例不因折扣改變 ｜ 未拍板（candidate）</div>
+</section>
+
+<!-- S14 closing -->
+<section class="slide" id="s14" aria-label="結尾">
+  <div class="bg"></div><div class="glow"></div><div class="veil"></div>
+  <div class="hd">
+    <div class="eyebrow">下一步</div>
+    <h2 class="split">門打開了，<br>她就<span class="em">找得到你</span>。</h2>
+  </div>
+  <div class="next">
+    <div class="nx"><b>01</b><span>提供近 12 個月營收與學員數<small>校正營收模型、確認分潤基準線</small></span></div>
+    <div class="nx"><b>02</b><span>確認特約店名單、儀器與產品資料<small>找店地圖與合規健檢的起點</small></span></div>
+    <div class="nx"><b>03</b><span>啟動 90 天試行<small>第 30 天召開第一次數據週會</small></span></div>
+  </div>
+  <div class="sign"><div class="logos"><img class="lg-sk" src="assets/brand/skinora-logo.png" alt="SKINORA 膚平術PRO 標誌"><span>×</span><span class="lg-ching"><img src="assets/brand/brand-logo.png" alt="靜享美學標誌"></span></div><small>第二曲線提案 · 未拍板（CANDIDATE）草稿 · 2026.11</small></div>
+</section>
+
+<div class="grain" aria-hidden="true"></div>
+</div></div>
+
+<div id="nav"><button class="prev" aria-label="上一頁"></button><button class="next" aria-label="下一頁"></button></div>
+<div id="hud"><div id="progress"></div><div id="hint">← → 換頁 ・ F 全螢幕 ・ M 配樂</div><button id="snd" type="button" aria-pressed="false" aria-label="配樂開關"><span>配樂 關</span><span class="eq"><i></i><i></i><i></i><i></i></span></button><div id="counter">01 / 05</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(function(){
+const stage=document.getElementById('stage');
+function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='translate(-50%,-50%) scale('+s+')';}
+addEventListener('resize',fit);fit();
+
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const slides=[...document.querySelectorAll('.slide')];
+const N=slides.length;
+let cur=-1,busy=false,tl=null,loops=[];
+
+// split headings into characters (keep <br> and spans)
+document.querySelectorAll('.split').forEach(el=>{
+  const walk=n=>{[...n.childNodes].forEach(c=>{
+    if(c.nodeType===3){const f=document.createDocumentFragment();[...c.textContent].forEach(ch=>{const s=document.createElement('span');s.className='ch';s.textContent=ch;f.appendChild(s)});c.replaceWith(f)}
+    else if(c.nodeType===1&&c.tagName!=='BR')walk(c);
+  })};walk(el);
+});
+
+// S1 contour lines
+(function(){const svg=document.querySelector('#s1 .contours');let d='';
+  for(let i=0;i<14;i++){const y0=170+i*58;let p='M -40 '+y0;
+    for(let x=-40;x<=1960;x+=40){const y=y0+Math.sin(x/260+i*.55)*26+Math.sin(x/97+i)*7+(x>1100?(x-1100)*.05*Math.sin(i):0);p+=' L '+x+' '+y.toFixed(1)}
+    d+='<path d="'+p+'"/>'}svg.innerHTML=d;})();
+
+// S2 calendar cells
+(function(){const c=document.querySelector('#s2 .cal');c.innerHTML='<span></span>'.repeat(28)})();
+
+// S3 dots: 106 ads -> 46 mom / 57 other / 3 fit
+const field=document.querySelector('#s3 .field');
+const dots=[];
+for(let i=0;i<106;i++){const d=document.createElement('div');d.className='dot';field.appendChild(d);dots.push(d)}
+function clusterPos(i){
+  if(i<46){const k=i,col=k%8,row=Math.floor(k/8);return [780+col*24,570+row*24,'mom']}
+  if(i<103){const k=i-46,col=k%10,row=Math.floor(k/10);return [1030+col*24,570+row*24,'other']}
+  const k=i-103;return [1340+k*40,610,'fit'];
+}
+
+// S4 blips (angle deg clockwise from top, radius px from center 450)
+const blips=[
+  {a:28,r:300,n:'Y.T.Q 韓式皮膚管理',s:'SKINORA 課程招生 · 39 天',c:'rose'},
+  {a:96,r:250,n:'Miu 時尚美睫館',s:'「一勞永逸」· 111 天',c:'rose'},
+  {a:150,r:330,n:'dou.90801',s:'SKINORA 皮紋修復 · 19 天',c:'rose'},
+  {a:205,r:370,n:'慕之恬廊（居家撫紋）',s:'40 週撫紋攻略 · 189 天',c:'sage',left:1},
+  {a:250,r:240,n:'BETA 貝塔 VARDA',s:'留言【紋路】領體驗 · 新上 4 則',c:'sage',left:1},
+  {a:300,r:380,n:'Mmine Skin52',s:'雙受眾素材 · 690 天',c:'sage',left:1},
+  {a:335,r:200,n:'Beibei Studio',s:'共感型影片 · 283 天',c:'sage',left:1},
+];
+const radar=document.querySelector('#s4 .radar');
+blips.forEach(b=>{const el=document.createElement('div');el.className='blip '+b.c+(b.left?' left':'');
+  const rad=(b.a-90)*Math.PI/180;el.style.left=(450+Math.cos(rad)*b.r)+'px';el.style.top=(450+Math.sin(rad)*b.r)+'px';
+  el.innerHTML='<i></i><div class="t">'+b.n+'<small>'+b.s+'</small></div>';radar.appendChild(el);b.el=el;});
+
+
+// ---------- S9 network ----------
+(function(){const svg=document.querySelector('#s9 .net'),sec=document.getElementById('s9');let h='';const paths=[];
+  [[482,0],[652,0],[822,1]].forEach(([y,g])=>{const d=`M510 ${y} C 700 ${y}, 760 650, 835 650`;paths.push([d,g]);h+=`<path class="wire i${g?' g':''}" d="${d}" stroke-dasharray="600"/>`});
+  [[425,0],[540,0],[655,0],[770,0],[885,1]].forEach(([y,g])=>{const d=`M1085 650 C 1220 650, 1250 ${y}, 1410 ${y}`;paths.push([d,g]);h+=`<path class="wire o${g?' g':''}" d="${d}" stroke-dasharray="700"/>`});
+  svg.innerHTML=h;
+  paths.forEach(([d,g])=>{const p=document.createElement('i');p.className='pkt'+(g?' g':'');p.style.offsetPath=`path('${d}')`;sec.appendChild(p)});
+})();
+
+// ---------- S10 feed cards ----------
+(function(){const H=[
+  ['H1 共感','skin_postpartum_hands','不是每一道紋路，都要被藏起來。'],
+  ['H2 同一標準','therapist_hands','台北、台中、高雄，都是同一套評估和流程。'],
+  ['H3 創辦人','brand/lucy-founder','國際皮紋修護賽事總召，親自訂下每家店的標準。'],
+  ['H4 健身','skin_arm_growth','練出線條了，紋路也跟著出來？'],
+  ['H5 透明價格','consult_assessment','傳一張照片，24 小時內告訴你大概幾次、多少錢。'],
+  ['H6 留言觸發','homecare_apply','留言【評估】，我把評估表傳給你。']];
+  const order=[[0,3,1,4],[2,5,0,3],[4,1,5,2]];
+  const card=k=>{const [tag,img,hook]=H[k];return `<div class="card"><div class="top"><i>S</i><div>SKINORA 膚平術PRO<small>贊助</small></div></div><div class="vis" style="background-image:url(assets/${img}.jpg)"><span class="tagh">${tag}</span><div class="hook">${hook}</div></div><div class="cta"><span>就近特約店・免費評估</span><b>發送訊息</b></div></div>`};
+  document.querySelectorAll('#s10 .colf').forEach((c,i)=>{const s=order[i].map(card).join('');c.innerHTML=s+s});
+})();
+
+// ---------- S11 chart ----------
+(function(){const svg=document.querySelector('#s11 .dual');
+  const ad=[10,12,15,18,21,24,26,28,28,30,30,30],org=[60,80,110,140,170,200,230,260,290,320,350,380];
+  const x0=70,x1=1580,yb=400,yt=110,slot=(x1-x0)/12,H=yb-yt;
+  const ya=v=>yb-v/40*H, yo=v=>yb-v/400*H, cx=i=>x0+slot*i+slot/2;
+  let s=`<defs><linearGradient id="gad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4917f" stop-opacity=".95"/><stop offset="1" stop-color="#d4917f" stop-opacity=".25"/></linearGradient><linearGradient id="gorg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#93b3a1" stop-opacity=".28"/><stop offset="1" stop-color="#93b3a1" stop-opacity="0"/></linearGradient></defs>`;
+  [[0,3,'測試','M1–M3｜每月 10–15 萬｜建立基準'],[3,8,'放量','M4–M8｜每月 18–28 萬｜降名單成本'],[8,12,'收成','M9–M12｜每月 28–30 萬｜UGC＋目錄廣告']].forEach(([a,b,n,d],k)=>{
+    s+=`<rect class="band${k%2?' b2':''}" x="${x0+slot*a+3}" y="0" width="${slot*(b-a)-6}" height="${yb+4}" rx="10"/>`;
+    s+=`<g class="bandt"><text class="bl" x="${x0+slot*a+20}" y="28">${n}</text><text class="bl2" x="${x0+slot*a+20}" y="54">${d}</text></g>`;});
+  [0,20,40].forEach(v=>{s+=`<line class="gl" x1="${x0}" x2="${x1}" y1="${ya(v)}" y2="${ya(v)}"/><text class="tk" x="${x0-14}" y="${ya(v)+5}" text-anchor="end">${v}</text>`});
+  [0,200,400].forEach(v=>{s+=`<text class="tk" x="${x1+14}" y="${yo(v)+5}">${v}</text>`});
+  ad.forEach((v,i)=>{s+=`<rect class="adbar" x="${cx(i)-30}" y="${ya(v)}" width="60" height="${yb-ya(v)}" rx="5"/><text class="tk" x="${cx(i)}" y="${yb+28}" text-anchor="middle">M${i+1}</text>`});
+  const pts=org.map((v,i)=>[cx(i),yo(v)]);
+  let d='M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L ');
+  s+=`<path class="orga" d="${d} L ${cx(11)} ${yb} L ${cx(0)} ${yb} Z"/><path class="org" d="${d}"/>`;
+  s+=`<text class="endv" x="${cx(11)}" y="${ya(30)-14}" text-anchor="middle" fill="#d4917f">30 萬</text>`;
+  s+=`<text class="endv" x="${cx(11)-46}" y="${yo(380)+48}" text-anchor="end" fill="#93b3a1">380 人</text>`;
+  pts.forEach((p,i)=>{if(i===11)s+=`<circle cx="${p[0]}" cy="${p[1]}" r="8" fill="#93b3a1" class="endv"/>`});
+  svg.innerHTML=s;
+})();
+
+function head(t,id,at){t.fromTo('#'+id+' .eyebrow',{opacity:0,y:12},{opacity:1,y:0,duration:1,ease:'expo.out'},at)
+  .fromTo(document.querySelectorAll('#'+id+' h2 .ch'),{opacity:0,y:30,filter:'blur(10px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.1,ease:'expo.out',stagger:.035},at+.2);}
+
+// ---------- Score: generative ambient soundtrack (Web Audio, original, no samples) ----------
+const Score=(function(){
+  let ctx=null,master,filt,verbIn,on=false,voices=[],arpT=null,pingT=null,shimT=null,scene='s1',lastScene=null;
+  const hz=n=>440*Math.pow(2,(n-69)/12);
+  const S={
+    s1:{n:[38,50,57,64,66,73],cut:950},
+    s2:{n:[35,47,54,61,62,66],cut:520},
+    s3:{n:[31,43,50,59,61,66],cut:680},
+    s4:{n:[30,42,49,57,61,64],cut:600,ping:1},
+    s5:{n:[33,45,52,59,62,64],cut:1400,shim:1},
+    s6:{n:[38,50,57,61,64,69],cut:1700,shim:1},
+    s7:{n:[40,52,59,62,66,71],cut:1150,arp:620},
+    s8:{n:[43,55,59,62,66,69],cut:1350,arp:400},
+    s9:{n:[35,47,54,57,61,62],cut:1050,arp:300},
+    s10:{n:[38,50,57,64,66,73],cut:1700,arp:260},
+    s11:{n:[33,45,52,57,59,64],cut:1450,arp:380},
+    s12:{n:[31,43,50,57,64,69],cut:1250,arp:500},
+    s13:{n:[38,50,57,61,66,69],cut:1150,shim:1},
+    s14:{n:[26,38,50,57,62,66,69],cut:2200,shim:1,swell:1},
+    s15:{n:[40,52,55,62,66,71],cut:1150,shim:1},
+    s16:{n:[45,57,61,64,66,69],cut:1500,arp:340},
+    s17:{n:[40,52,59,62,64,67],cut:1300,arp:300},
+    s18:{n:[43,55,59,62,64,69],cut:1400,shim:1},
+    s19:{n:[38,50,57,62,66,69],cut:1800,arp:420},
+    s20:{n:[38,50,57,61,64,69],cut:1500,shim:1},
+    s21:{n:[35,47,54,59,62,66],cut:700}
+  };
+  function impulse(sec){const r=ctx.sampleRate,len=r*sec,b=ctx.createBuffer(2,len,r);
+    for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6)}return b}
+  function init(){
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    master=ctx.createGain();master.gain.value=0;
+    const comp=ctx.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=3;
+    const verb=ctx.createConvolver();verb.buffer=impulse(5.5);
+    const wet=ctx.createGain();wet.gain.value=.7;const dry=ctx.createGain();dry.gain.value=.55;
+    filt=ctx.createBiquadFilter();filt.type='lowpass';filt.frequency.value=900;filt.Q.value=.6;
+    verbIn=ctx.createGain();verbIn.connect(verb);verb.connect(wet);
+    filt.connect(dry);filt.connect(verbIn);dry.connect(master);wet.connect(master);master.connect(comp);comp.connect(ctx.destination);
+    const lfo=ctx.createOscillator(),lg=ctx.createGain();lfo.frequency.value=.06;lg.gain.value=180;lfo.connect(lg);lg.connect(filt.frequency);lfo.start();
+  }
+  function pad(notes,t){const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(1,t+3.2);g.connect(filt);const os=[];
+    notes.forEach((n,i)=>{const dets=i===0?[0]:[-8,8];dets.forEach(dt=>{const o=ctx.createOscillator();o.type=i===0?'sine':(i%2?'triangle':'sine');
+      o.frequency.value=hz(n);o.detune.value=dt;const vg=ctx.createGain();vg.gain.value=i===0?.22:.075;
+      const tr=ctx.createGain();tr.gain.value=1;const tl=ctx.createOscillator(),tlg=ctx.createGain();tl.frequency.value=.1+Math.random()*.15;tlg.gain.value=.25;tl.connect(tlg);tlg.connect(tr.gain);tl.start(t);
+      o.connect(vg);vg.connect(tr);tr.connect(g);o.start(t);os.push(o,tl)})});
+    return{g,os}}
+  function pluck(n,vol,len){const t=ctx.currentTime,o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o2.type='triangle';
+    o.frequency.value=hz(n);o2.frequency.value=hz(n)*2.001;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+(len||2.6));
+    const g2=ctx.createGain();g2.gain.value=.25;o.connect(g);o2.connect(g2);g2.connect(g);g.connect(verbIn);g.connect(master);o.start(t);o2.start(t);o.stop(t+(len||2.6)+.1);o2.stop(t+(len||2.6)+.1)}
+  function ping(){const t=ctx.currentTime,o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(1480,t);o.frequency.exponentialRampToValueAtTime(1180,t+.25);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.06,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+1.8);o.connect(g);g.connect(verbIn);g.connect(master);o.start(t);o.stop(t+2)}
+  function whoosh(){const t=ctx.currentTime,len=1.6,b=ctx.createBuffer(1,ctx.sampleRate*len,ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+    const s=ctx.createBufferSource();s.buffer=b;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.Q.value=1.2;bp.frequency.setValueAtTime(250,t);bp.frequency.exponentialRampToValueAtTime(2600,t+1.1);
+    const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+.5);g.gain.linearRampToValueAtTime(0,t+1.5);s.connect(bp);bp.connect(g);g.connect(verbIn);g.connect(master);s.start(t)}
+  function apply(id){if(!ctx||!on)return;const c=S[id]||S.s1,t=ctx.currentTime;
+    voices.forEach(v=>{v.g.gain.cancelScheduledValues(t);v.g.gain.setValueAtTime(v.g.gain.value,t);v.g.gain.linearRampToValueAtTime(0,t+3);v.os.forEach(o=>{try{o.stop(t+3.2)}catch(e){}})});
+    voices=[pad(c.n,t)];
+    filt.frequency.cancelScheduledValues(t);filt.frequency.setTargetAtTime(c.cut,t,1.4);
+    if(lastScene!==null)whoosh();lastScene=id;
+    clearInterval(arpT);clearInterval(pingT);clearTimeout(shimT);
+    if(c.arp){let k=0;const seq=c.n.slice(1);arpT=setInterval(()=>{pluck(seq[k%seq.length]+12,.035,1.8);k++},c.arp)}
+    if(c.ping){setTimeout(ping,1600);pingT=setInterval(ping,4200)}
+    const shim=()=>{const seq=c.n.slice(2);pluck(seq[Math.floor(Math.random()*seq.length)]+24,c.shim?.03:.018,3.2);shimT=setTimeout(shim,(c.shim?1800:3600)+Math.random()*2400)};shimT=setTimeout(shim,1200);
+    if(c.swell){master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(master.gain.value,t);master.gain.linearRampToValueAtTime(.62,t+5)}
+    else{master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(master.gain.value,t);master.gain.linearRampToValueAtTime(.48,t+2)}
+  }
+  return{
+    scene(id){scene=id;apply(id)},
+    start(){if(on)return;if(!ctx)init();ctx.resume();on=true;lastScene=null;apply(scene);ui()},
+    stop(){if(!on||!ctx)return;on=false;const t=ctx.currentTime;master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(master.gain.value,t);master.gain.linearRampToValueAtTime(0,t+1.2);
+      clearInterval(arpT);clearInterval(pingT);clearTimeout(shimT);setTimeout(()=>{if(!on){voices.forEach(v=>v.os.forEach(o=>{try{o.stop()}catch(e){}}));voices=[];ctx.suspend()}},1400);ui()},
+    toggle(){on?this.stop():this.start()},
+    get on(){return on}
+  };
+  function ui(){const b=document.getElementById('snd');if(!b)return;b.classList.toggle('on',on);b.querySelector('span').textContent=on?'配樂 開':'配樂 關';b.setAttribute('aria-pressed',on)}
+})();
+let userMuted=false;
+
+// ---------- per-slide builders ----------
+const E='expo.out';
+function chars(sel){return document.querySelectorAll(sel+' .ch')}
+const build={
+ s1(){const t=gsap.timeline();
+   t.fromTo('#s1 .bg',{scale:1.18,opacity:0},{scale:1.04,opacity:1,duration:3.2,ease:'power2.out'},0)
+    .fromTo('#s1 .contours path',{strokeDasharray:2400,strokeDashoffset:2400},{strokeDashoffset:0,duration:3.4,ease:'power2.inOut',stagger:.09},.2)
+    .fromTo('#s1 .eyebrow',{opacity:0,y:14,letterSpacing:'.6em'},{opacity:1,y:0,letterSpacing:'.32em',duration:1.4,ease:E},.5)
+    .fromTo(chars('#s1 h1'),{opacity:0,y:40,filter:'blur(14px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.3,ease:E,stagger:.045},.8)
+    .fromTo('#s1 .rule',{width:0},{width:320,duration:1.4,ease:'power3.inOut'},'-=.6')
+    .fromTo('#s1 .tagline',{opacity:0,y:16,filter:'blur(6px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.6,ease:E},'-=.8')
+    .fromTo('#s1 .sub',{opacity:0,y:16},{opacity:1,y:0,duration:1.1,ease:E},'-=.9')
+    .fromTo(['#s1 .status','#s1 .src'],{opacity:0},{opacity:1,duration:1.2},'-=.6')
+    .fromTo('#s1 .logo1',{opacity:0,y:-10},{opacity:.92,y:0,duration:1.4,ease:E},.6);
+   loops.push(gsap.to('#s1 .bg',{scale:1.12,xPercent:-1.5,duration:24,ease:'none',delay:3}));
+   loops.push(gsap.to('#s1 .contours',{x:-30,duration:12,yoyo:true,repeat:-1,ease:'sine.inOut'}));
+   return t;},
+ s2(){const t=gsap.timeline();const q=document.querySelector('#s2 .q');q.textContent='';
+   const word='膚平術 價格',o={n:0};
+   gsap.set('#s2 .booking',{opacity:0,y:30});gsap.set('#s2 .res',{opacity:0,y:20});
+   t.fromTo('#s2 .bg',{scale:1.12,opacity:0},{scale:1.03,opacity:1,duration:2.6,ease:'power2.out'},0)
+    .fromTo('#s2 .tag',{opacity:0,x:-20},{opacity:1,x:0,duration:1,ease:E},.3)
+    .fromTo('#s2 .phone',{opacity:0,y:80,rotate:4},{opacity:1,y:0,rotate:0,duration:1.6,ease:E},.4)
+    .fromTo('#s2 .line:nth-child(1)',{opacity:0,y:24,filter:'blur(8px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.2,ease:E},1.2)
+    .to(o,{n:word.length,duration:1.4,ease:'none',onUpdate:()=>{q.textContent=word.slice(0,Math.round(o.n))}},1.5)
+    .to('#s2 .res',{opacity:1,y:0,duration:.8,ease:E,stagger:.18},3.1)
+    .fromTo('#s2 .res.first',{scale:1},{scale:1.04,duration:.5,yoyo:true,repeat:1,ease:'power2.inOut'},3.9)
+    .fromTo('#s2 .line:nth-child(2)',{opacity:0,y:24,filter:'blur(8px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.2,ease:E},3.9)
+    .to('#s2 .res:nth-child(3)',{backgroundColor:'#f6e3de',duration:.4},5.4)
+    .to('#s2 .booking',{opacity:1,y:0,duration:.9,ease:E},5.9)
+    .fromTo('#s2 .empty',{scale:.8,opacity:0},{scale:1,opacity:1,duration:.7,ease:'back.out(2)'},6.6)
+    .to('#s2 .empty',{x:-8,duration:.07,repeat:5,yoyo:true,ease:'none'},7.3)
+    .fromTo('#s2 .line:nth-child(3)',{opacity:0,y:24,filter:'blur(8px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.2,ease:E},6.8)
+    .fromTo('#s2 .takeaway',{opacity:0,y:16},{opacity:1,y:0,duration:1.2,ease:E},8.0)
+    .fromTo('#s2 .src',{opacity:0},{opacity:1,duration:1},8.2);
+   loops.push(gsap.to('#s2 .bg',{scale:1.1,duration:20,ease:'none',delay:2.6}));
+   return t;},
+ s3(){const t=gsap.timeline();const num=document.querySelector('#s3 .births .num');const o={v:134900};
+   num.textContent='134,900';
+   dots.forEach(d=>{gsap.set(d,{left:200+Math.random()*1560,top:180+Math.random()*760,opacity:0,scale:0,className:'dot'})});
+   t.fromTo('#s3 .eyebrow',{opacity:0,y:12},{opacity:1,y:0,duration:1,ease:E},.1)
+    .fromTo(chars('#s3 h2'),{opacity:0,y:30,filter:'blur(10px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.1,ease:E,stagger:.035},.3)
+    .fromTo('#s3 .births',{opacity:0,y:30},{opacity:1,y:0,duration:1.2,ease:E},1.3)
+    .to(o,{v:107812,duration:2.6,ease:'power3.out',onUpdate:()=>{num.textContent=Math.round(o.v).toLocaleString('en-US')}},1.5)
+    .fromTo('#s3 .births .delta',{opacity:0,x:-10},{opacity:1,x:0,duration:.8,ease:E},3.6)
+    // the ad field
+    .to('#s3 .births',{opacity:.38,scale:.86,transformOrigin:'left top',duration:1.2,ease:'power2.inOut'},4.6)
+    .to(dots,{opacity:1,scale:1,duration:.8,ease:'back.out(2)',stagger:{each:.008,from:'random'}},4.7)
+    .add(()=>{},5.8);
+   dots.forEach((d,i)=>{const [x,y,c]=clusterPos(i);
+     t.to(d,{left:x,top:y,duration:1.6,ease:'power3.inOut',onStart:()=>{d.classList.add(c)}},6.0+Math.random()*.5)});
+   t.fromTo('#s3 .lab.mom',{opacity:0,y:14},{opacity:1,y:0,duration:.9,ease:E},7.6)
+    .fromTo('#s3 .lab.other',{opacity:0,y:14},{opacity:1,y:0,duration:.9,ease:E},7.8)
+    .to('#s3 .gym',{opacity:1,duration:2.2,ease:'power2.out'},8.4)
+    .fromTo('#s3 .lab.fit',{opacity:0,y:14},{opacity:1,y:0,duration:.9,ease:E},8.8)
+    .to('#s3 .dot.fit',{scale:1.6,duration:.6,yoyo:true,repeat:3,ease:'sine.inOut'},8.8)
+    .fromTo('#s3 .punch',{opacity:0,y:24,filter:'blur(8px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.4,ease:E},9.6)
+    .fromTo('#s3 .src',{opacity:0},{opacity:1,duration:1},10);
+   return t;},
+ s4(){const t=gsap.timeline();const period=4.2;
+   blips.forEach(b=>gsap.set(b.el,{opacity:0,scale:.4}));
+   gsap.set('#s4 .sweep',{rotation:0});
+   t.fromTo('#s4 .eyebrow',{opacity:0,y:12},{opacity:1,y:0,duration:1,ease:E},.1)
+    .fromTo(chars('#s4 h2'),{opacity:0,y:30,filter:'blur(10px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.1,ease:E,stagger:.04},.3)
+    .fromTo('#s4 .ring',{scale:.6,opacity:0},{scale:1,opacity:1,duration:1.6,ease:E,stagger:.12},.4)
+    .fromTo('#s4 .core',{scale:0},{scale:1,duration:1,ease:'back.out(1.8)'},.9)
+    .fromTo('#s4 .fact:nth-child(1)',{opacity:0,x:-24},{opacity:1,x:0,duration:1,ease:E},1.4);
+   const start=1.6;
+   loops.push(gsap.to('#s4 .sweep',{rotation:360,duration:period,ease:'none',repeat:-1,delay:start}));
+   blips.forEach(b=>{const at=start+period*(b.a/360);
+     t.to(b.el,{opacity:1,scale:1,duration:.5,ease:'back.out(2.4)'},at)
+      .fromTo(b.el.querySelector('i'),{boxShadow:'0 0 0 0px '+(b.c==='rose'?'rgba(212,145,127,.7)':'rgba(147,179,161,.7)')},{boxShadow:'0 0 0 26px rgba(0,0,0,0)',duration:1.2,ease:'power2.out'},at)});
+   t.fromTo('#s4 .fact:nth-child(2)',{opacity:0,x:-24},{opacity:1,x:0,duration:1,ease:E},start+period*.42)
+    .fromTo('#s4 .fact:nth-child(3)',{opacity:0,x:-24},{opacity:1,x:0,duration:1,ease:E},start+period*.62)
+    .fromTo(['#s4 .legend','#s4 .src'],{opacity:0},{opacity:1,duration:1},start+period);
+   return t;},
+ s5(){const t=gsap.timeline();const tn=document.querySelector('#s5 .tn');const o={v:0};tn.textContent='0';
+   const p1=document.querySelector('#s5 .c1'),p2=document.querySelector('#s5 .c2');
+   const L1=p1.getTotalLength(),L2=p2.getTotalLength();
+   t.fromTo('#s5 .bg',{scale:1.15,opacity:0},{scale:1.03,opacity:1,duration:3,ease:'power2.out'},0)
+    .fromTo('#s5 .eyebrow',{opacity:0,y:12},{opacity:1,y:0,duration:1,ease:E},.2)
+    .fromTo(chars('#s5 h2'),{opacity:0,y:30,filter:'blur(10px)'},{opacity:1,y:0,filter:'blur(0px)',duration:1.1,ease:E,stagger:.04},.4)
+    .fromTo(p1,{strokeDasharray:L1,strokeDashoffset:L1},{strokeDashoffset:0,duration:2.4,ease:'power2.inOut'},1.4)
+    .fromTo('#s5 .cl.one',{opacity:0,y:20},{opacity:1,y:0,duration:1,ease:E},2.6)
+    .fromTo(p2,{strokeDasharray:L2,strokeDashoffset:L2},{strokeDashoffset:0,duration:2.6,ease:'power3.inOut'},3.4)
+    .to('#s5 .a2',{opacity:1,duration:2,ease:'power2.out'},4.6)
+    .fromTo('#s5 .cl.two',{opacity:0,y:20},{opacity:1,y:0,duration:1,ease:E},5.0)
+    .fromTo('#s5 .total',{opacity:0,y:20},{opacity:1,y:0,duration:1,ease:E},3.4)
+    .to(o,{v:3000,duration:3.4,ease:'power3.out',onUpdate:()=>{tn.textContent=Math.round(o.v).toLocaleString('en-US')}},3.5)
+    .fromTo('#s5 .part',{opacity:0,y:30},{opacity:1,y:0,duration:1,ease:E,stagger:.15},6.0)
+    .fromTo('#s5 .thumb',{scale:.6,rotate:-6},{scale:1,rotate:0,duration:1,ease:'back.out(1.8)'},6.2)
+    .fromTo('#s5 .src',{opacity:0},{opacity:1,duration:1},6.8);
+   loops.push(gsap.to('#s5 .bg',{scale:1.1,yPercent:-1,duration:22,ease:'none',delay:3}));
+   return t;},
+ s6(){const t=gsap.timeline();
+   t.fromTo('#s6 .bg',{scale:1.14,opacity:0},{scale:1.03,opacity:1,duration:3,ease:'power2.out'},0);
+   head(t,'s6',.4);
+   t.fromTo('#s6 .rail i',{height:0},{height:500,duration:3.6,ease:'power2.inOut'},1.5);
+   document.querySelectorAll('#s6 .step').forEach((s,i)=>{
+     t.fromTo(s,{opacity:0,x:-24},{opacity:1,x:0,duration:.9,ease:E},1.6+i*.7)
+      .fromTo(s.querySelector('.p'),{scale:0,backgroundColor:'#e6c0ad'},{scale:1,backgroundColor:'#0c100f',duration:.8,ease:'back.out(3)'},1.6+i*.7)});
+   t.fromTo('#s6 .src',{opacity:0},{opacity:1,duration:1},5.4);
+   loops.push(gsap.to('#s6 .bg',{scale:1.1,xPercent:1.5,duration:22,ease:'none',delay:3}));
+   return t;},
+ s7(){const t=gsap.timeline();
+   t.fromTo('#s7 .bg',{scale:1.2,opacity:0},{scale:1.04,opacity:.55,duration:3,ease:'power2.out'},0);
+   head(t,'s7',.3);
+   document.querySelectorAll('#s7 .col').forEach((c,i)=>{const bar=c.querySelector('.bar'),v=c.querySelector('.v'),h=+bar.dataset.h;
+     const n=+v.dataset.n,dec=+(v.dataset.dec||0),unit=v.dataset.unit||'';const o={x:0};
+     gsap.set(bar,{height:h});
+     const at=1.4+i*.42;
+     t.fromTo(bar,{scaleY:0,opacity:0},{scaleY:1,opacity:1,duration:1.1,ease:'expo.out'},at)
+      .fromTo([v,c.querySelector('.l')],{opacity:0,y:14},{opacity:1,y:0,duration:.8,ease:E},at+.1)
+      .to(o,{x:n,duration:1.4,ease:'power3.out',onUpdate:()=>{v.innerHTML=(dec?o.x.toFixed(dec):Math.round(o.x).toLocaleString('en-US'))+(unit?'<em>'+unit+'</em>':'')}},at+.1);
+     const r=c.querySelector('.rate');if(r)t.fromTo(r,{opacity:0,scale:.6},{opacity:1,scale:1,duration:.6,ease:'back.out(2)'},at+.55);
+   });
+   t.fromTo('#s7 .src',{opacity:0},{opacity:1,duration:1},4.6);
+   loops.push(gsap.to('#s7 .bg',{scale:1.12,xPercent:-2,duration:20,ease:'none',delay:3}));
+   return t;},
+ s8(){const t=gsap.timeline();const C=2*Math.PI*300,C2=2*Math.PI*95;
+   head(t,'s8',.1);
+   t.fromTo('#s8 .ring',{strokeDasharray:C,strokeDashoffset:C},{strokeDashoffset:0,duration:2,ease:'power2.inOut'},.5)
+    .fromTo('#s8 .ticks',{opacity:0,scale:.92,transformOrigin:'400px 450px'},{opacity:1,scale:1,duration:1.6,ease:E},.6)
+    .fromTo('#s8 .node:not(.g)',{opacity:0,scale:.6},{opacity:1,scale:1,duration:.8,ease:'back.out(2)',stagger:.35},1.4)
+    .fromTo('#s8 .center',{opacity:0,scale:.9},{opacity:1,scale:1,duration:1,ease:E},2.8)
+    .fromTo('#s8 .ring2',{strokeDasharray:C2,strokeDashoffset:C2},{strokeDashoffset:0,duration:1.2,ease:'power2.inOut'},3.4)
+    .fromTo('#s8 .node.g',{opacity:0},{opacity:1,duration:.8},3.8)
+    .fromTo('#s8 .pt',{opacity:0,x:-24},{opacity:1,x:0,duration:.9,ease:E,stagger:.45},2.6);
+   gsap.set('#s8 .flow',{strokeDasharray:'240 '+(C-240),strokeDashoffset:0,opacity:0});
+   gsap.set('#s8 .flow2',{strokeDasharray:'70 '+(C2-70),strokeDashoffset:0,opacity:0});
+   t.to('#s8 .flow',{opacity:1,duration:.6},2.2).to('#s8 .flow2',{opacity:1,duration:.6},4.2);
+   loops.push(gsap.to('#s8 .flow',{strokeDashoffset:-C,duration:4.4,ease:'none',repeat:-1,delay:2.2}));
+   loops.push(gsap.to('#s8 .flow2',{strokeDashoffset:-C2,duration:2.6,ease:'none',repeat:-1,delay:4.2}));
+   loops.push(gsap.to('#s8 .ticks',{rotation:360,svgOrigin:'400 450',duration:60,ease:'none',repeat:-1}));
+   const nodes=[...document.querySelectorAll('#s8 .node:not(.g) i')];
+   loops.push(gsap.timeline({repeat:-1,delay:2.2}).to(nodes,{scale:1.45,borderColor:'#f0e7de',duration:.35,ease:'power2.out',stagger:1.1,yoyo:true,repeat:1}));
+   return t;},
+ s9(){const t=gsap.timeline();
+   t.fromTo('#s9 .bg',{opacity:0,scale:1.1},{opacity:.32,scale:1.02,duration:2.6,ease:'power2.out'},0);
+   head(t,'s9',.2);
+   t.fromTo('#s9 .in',{opacity:0,x:-40},{opacity:1,x:0,duration:.9,ease:E,stagger:.25},1.2)
+    .fromTo('#s9 .wire.i',{strokeDashoffset:600},{strokeDashoffset:0,duration:1.2,ease:'power2.inOut',stagger:.2},1.6)
+    .fromTo('#s9 .hub',{opacity:0,scale:.5},{opacity:1,scale:1,duration:1,ease:'back.out(1.8)'},2.2)
+    .fromTo('#s9 .wire.o',{strokeDashoffset:700},{strokeDashoffset:0,duration:1.2,ease:'power2.inOut',stagger:.12},2.8)
+    .fromTo('#s9 .out',{opacity:0,x:30},{opacity:1,x:0,duration:.8,ease:E,stagger:.15},3.1)
+    .fromTo('#s9 .rule9',{opacity:0,y:14},{opacity:1,y:0,duration:1,ease:E},4.4);
+   loops.push(gsap.fromTo('#s9 .halo',{opacity:.7,scale:1},{opacity:0,scale:1.7,duration:2.4,ease:'power2.out',repeat:-1,delay:2.6}));
+   document.querySelectorAll('#s9 .pkt').forEach((p,i)=>{gsap.set(p,{opacity:0});
+     const lt=gsap.timeline({repeat:-1,repeatDelay:1+(i%3)*.6,delay:3.2+i*.33});
+     lt.set(p,{opacity:1,offsetDistance:'0%'}).to(p,{offsetDistance:'100%',duration:1.5,ease:'power1.inOut'}).set(p,{opacity:0});loops.push(lt);});
+   return t;},
+ s10(){const t=gsap.timeline();
+   head(t,'s10',.1);
+   t.fromTo('#s10 .feed',{opacity:0,x:120},{opacity:1,x:0,duration:1.8,ease:E},.4)
+    .fromTo('#s10 .st',{opacity:0,x:-24},{opacity:1,x:0,duration:.9,ease:E,stagger:.35},1.4)
+    .fromTo('#s10 .draft',{opacity:0},{opacity:1,duration:1},2.6);
+   document.querySelectorAll('#s10 .colf').forEach((c,i)=>{const up=i!==1;
+     loops.push(gsap.fromTo(c,{yPercent:up?0:-50},{yPercent:up?-50:0,duration:38+i*6,ease:'none',repeat:-1}))});
+   return t;},
+ s11(){const t=gsap.timeline();
+   head(t,'s11',.1);
+   t.fromTo('#s11 .legend11',{opacity:0},{opacity:1,duration:.8},.8)
+    .fromTo('#s11 .band',{opacity:0},{opacity:1,duration:1,stagger:.2},.9)
+    .fromTo('#s11 .bandt',{opacity:0,y:10},{opacity:1,y:0,duration:.8,ease:E,stagger:.3},1.1)
+    .fromTo('#s11 .adbar',{scaleY:0,transformOrigin:'50% 100%'},{scaleY:1,duration:.9,ease:'expo.out',stagger:.12},1.4);
+   const p=document.querySelector('#s11 .org'),L=p.getTotalLength();
+   t.fromTo(p,{strokeDasharray:L,strokeDashoffset:L},{strokeDashoffset:0,duration:2.6,ease:'power2.inOut'},2.0)
+    .fromTo('#s11 .orga',{opacity:0},{opacity:1,duration:1.6},3.0)
+    .fromTo('#s11 .endv',{opacity:0},{opacity:1,duration:.8,stagger:.2},4.2)
+    .fromTo('#s11 .chip',{opacity:0,y:20},{opacity:1,y:0,duration:.8,ease:E,stagger:.12},4.4)
+    .fromTo('#s11 .src',{opacity:0},{opacity:1,duration:1},5.2);
+   return t;},
+ s12(){const t=gsap.timeline();
+   head(t,'s12',.1);
+   t.fromTo('#s12 .wk span',{opacity:0},{opacity:1,duration:.5,stagger:.04},.9)
+    .fromTo('#s12 .row .nm',{opacity:0,x:-20},{opacity:1,x:0,duration:.8,ease:E,stagger:.2},1.2)
+    .fromTo('#s12 .bar',{scaleX:0},{scaleX:1,duration:1.1,ease:'expo.out',stagger:.38},1.7)
+    .fromTo('#s12 .today',{opacity:0,left:260},{opacity:1,left:1340,duration:4.4,ease:'power1.inOut'},1.7)
+    .fromTo('#s12 .check',{opacity:0,x:30},{opacity:1,x:0,duration:1,ease:E},4.6)
+    .fromTo('#s12 .check li',{opacity:0,x:16},{opacity:1,x:0,duration:.6,ease:E,stagger:.25},5.0);
+   return t;},
+ s13(){const t=gsap.timeline();
+   head(t,'s13',.1);
+   t.fromTo('#s13 .plan',{opacity:0,y:50},{opacity:1,y:0,duration:1.1,ease:E,stagger:.2},1.2)
+    .fromTo('#s13 .plan.rec',{scale:.96},{scale:1.03,duration:1.2,ease:'back.out(1.6)'},1.8)
+    .fromTo('#s13 .plan li',{opacity:0,x:-10},{opacity:1,x:0,duration:.4,stagger:.04},1.8)
+    .fromTo('#s13 .eff',{opacity:0},{opacity:1,duration:.8,stagger:.2},3.2)
+    .fromTo('#s13 .src',{opacity:0},{opacity:1,duration:1},4);
+   loops.push(gsap.to('#s13 .plan.rec',{boxShadow:'0 30px 120px rgba(212,145,127,.28)',duration:2.2,yoyo:true,repeat:-1,ease:'sine.inOut',delay:3}));
+   return t;},
+ s14(){const t=gsap.timeline();
+   t.fromTo('#s14 .bg',{scale:1.22,opacity:0},{scale:1.05,opacity:1,duration:4,ease:'power2.out'},0)
+    .fromTo('#s14 .glow',{opacity:0},{opacity:1,duration:3},1);
+   head(t,'s14',.8);
+   t.fromTo('#s14 .nx',{opacity:0,y:24},{opacity:1,y:0,duration:1,ease:E,stagger:.4},2.4)
+    .fromTo('#s14 .sign',{opacity:0,y:10},{opacity:1,y:0,duration:1.4,ease:E},4.0);
+   loops.push(gsap.to('#s14 .bg',{scale:1.14,duration:26,ease:'none',delay:4}));
+   loops.push(gsap.to('#s14 .glow',{opacity:.55,duration:3,yoyo:true,repeat:-1,ease:'sine.inOut',delay:4}));
+   return t;}
+,
+ s15(){const t=gsap.timeline();
+   head(t,'s15',.1);
+   t.fromTo('#s15 .l15',{opacity:0,y:16},{opacity:1,y:0,duration:1,ease:E},1.0)
+    .fromTo('#s15 .tk15',{opacity:0},{opacity:1,duration:.8,stagger:.1},1.2)
+    .fromTo('#s15 .pl',{opacity:0,x:-20},{opacity:1,x:0,duration:.8,ease:E,stagger:.3},1.4)
+    .fromTo('#s15 .rg',{scaleX:0},{scaleX:1,duration:1.2,ease:'expo.out',stagger:.3},1.6)
+    .fromTo('#s15 .mk',{opacity:0,y:24},{opacity:1,y:0,duration:.7,ease:'back.out(2.2)',stagger:.2},3.0)
+    .fromTo('#s15 .pc',{opacity:0,y:24},{opacity:1,y:0,duration:.8,ease:E,stagger:.1},3.6)
+    .fromTo('#s15 .src',{opacity:0},{opacity:1,duration:1},4.6);
+   loops.push(gsap.to('#s15 .rg.sk',{boxShadow:'0 0 70px rgba(212,145,127,.45)',duration:1.8,yoyo:true,repeat:-1,ease:'sine.inOut',delay:3}));
+   return t;},
+ s16(){const t=gsap.timeline();
+   head(t,'s16',.1);
+   t.fromTo('#s16 .tot16',{opacity:0,y:16},{opacity:1,y:0,duration:1,ease:E},.8)
+    .fromTo('#s16 .pn',{opacity:0,x:-20},{opacity:1,x:0,duration:.8,ease:E,stagger:.25},1.2)
+    .fromTo('#s16 .pbar',{scaleX:0},{scaleX:1,duration:1.3,ease:'expo.out',stagger:.3},1.4)
+    .fromTo('#s16 .ac',{opacity:0,y:30},{opacity:1,y:0,duration:.8,ease:E,stagger:.12},2.6)
+    .fromTo('#s16 .src',{opacity:0},{opacity:1,duration:1},3.8);
+   return t;},
+ s17(){const t=gsap.timeline();
+   head(t,'s17',.1);
+   t.fromTo('#s17 .ly',{opacity:0,scaleX:.6},{opacity:1,scaleX:1,duration:.9,ease:'expo.out',stagger:.32},1.0)
+    .fromTo('#s17 .lk',{opacity:0,x:-10},{opacity:1,x:0,duration:.6,ease:E,stagger:.32},1.5)
+    .fromTo('#s17 .kt',{opacity:0,x:30},{opacity:1,x:0,duration:1,ease:E},3.0)
+    .fromTo('#s17 tbody tr',{opacity:0},{opacity:1,duration:.4,stagger:.12},3.3)
+    .fromTo('#s17 .src',{opacity:0},{opacity:1,duration:1},4.4);
+   return t;},
+ s18(){const t=gsap.timeline();
+   head(t,'s18',.1);
+   t.fromTo('#s18 .tiers',{opacity:0,y:16},{opacity:1,y:0,duration:1,ease:E},.9);
+   document.querySelectorAll('#s18 .wb').forEach((w,i)=>{const at=1.4+i*.45;
+     t.fromTo(w,{scaleY:0},{scaleY:1,duration:.9,ease:'expo.out'},at).fromTo(w.querySelector('.wv'),{opacity:0,y:8},{opacity:1,y:0,duration:.5},at+.4)});
+   t.fromTo('#s18 .wn',{opacity:0},{opacity:1,duration:.6,stagger:.45},1.6)
+    .fromTo('#s18 .wnote',{opacity:0,y:16},{opacity:1,y:0,duration:1,ease:E},4.6)
+    .fromTo('#s18 .src',{opacity:0},{opacity:1,duration:1},5.2);
+   return t;},
+ s19(){const t=gsap.timeline();const nv=document.querySelector('#s19 .nv'),pv=document.querySelector('#s19 .pv');const o={p:0};nv.textContent='20';pv.textContent='0%';
+   document.querySelectorAll('#s19 .tk').forEach(x=>x.classList.remove('done'));
+   head(t,'s19',.1);
+   t.fromTo('#s19 .price19',{opacity:0,x:30},{opacity:1,x:0,duration:1,ease:E},.9)
+    .fromTo('#s19 .tk',{opacity:0,x:-24},{opacity:1,x:0,duration:.6,ease:E,stagger:.12},1.1);
+   let acc=0;
+   document.querySelectorAll('#s19 .tk').forEach((x,i)=>{const p=+x.dataset.p;const from=acc;acc+=p;const to=acc;const at=2.4+i*.55;
+     t.add(()=>x.classList.add('done'),at)
+      .to(o,{p:to,duration:.5,ease:'power2.out',onUpdate:()=>{pv.textContent=Math.round(o.p)+'%';nv.textContent=(20*(1-o.p/100)).toFixed(o.p%10?1:0).replace('.0','')}},at)
+      .to('#s19 .prog i',{width:(to*2)+'%',duration:.5,ease:'power2.out'},at)});
+   t.fromTo('#s19 .src',{opacity:0},{opacity:1,duration:1},6.6);
+   return t;},
+ s20(){const t=gsap.timeline();
+   t.fromTo('#s20 .fp',{opacity:0,scale:1.08},{opacity:1,scale:1,duration:2.4,ease:'power2.out'},0);
+   head(t,'s20',.5);
+   t.fromTo('#s20 .cr',{opacity:0,y:18},{opacity:1,y:0,duration:.7,ease:E,stagger:.15},1.6)
+    .fromTo('#s20 .role',{opacity:0,y:20},{opacity:1,y:0,duration:1,ease:E},2.8)
+    .fromTo('#s20 .src',{opacity:0},{opacity:1,duration:1},3.4);
+   loops.push(gsap.to('#s20 .fp',{scale:1.05,duration:20,ease:'none',delay:2.4}));
+   return t;},
+ s21(){const t=gsap.timeline();
+   head(t,'s21',.1);
+   t.fromTo('#s21 .im',{clipPath:'inset(100% 0% 0% 0% round 18px)'},{clipPath:'inset(0% 0% 0% 0% round 18px)',duration:1.4,ease:'expo.inOut',stagger:.35},.9)
+    .fromTo('#s21 .im',{backgroundSize:'auto 125%'},{backgroundSize:'auto 105%',duration:3,ease:'power2.out',stagger:.35},.9)
+    .fromTo('#s21 .lede21',{opacity:0,y:14},{opacity:1,y:0,duration:1,ease:E},1.4)
+    .fromTo('#s21 figcaption',{opacity:0,y:14},{opacity:1,y:0,duration:.8,ease:E,stagger:.35},1.9)
+    .fromTo('#s21 .src',{opacity:0},{opacity:1,duration:1},3.4);
+   return t;}
+};
+
+// subtle parallax on pointer
+let px=0,py=0;
+addEventListener('pointermove',e=>{px=e.clientX/innerWidth-.5;py=e.clientY/innerHeight-.5;
+  if(reduce||cur<0)return;const s=slides[cur];
+  gsap.to(s.querySelectorAll('.bg,.gym'),{x:px*-28,y:py*-18,duration:1.6,ease:'power2.out',overwrite:'auto'});
+  gsap.to(s.querySelectorAll('.radar,.curves,.contours'),{x:px*14,y:py*10,duration:1.8,ease:'power2.out',overwrite:'auto'});
+});
+
+function go(n,instant){
+  n=Math.max(0,Math.min(N-1,n));if(n===cur||busy)return;
+  const prev=cur>=0?slides[cur]:null,next=slides[n],dir=n>cur?1:-1;
+  busy=true;loops.forEach(l=>l.kill());loops=[];if(tl)tl.kill();
+  next.classList.add('on');
+  gsap.set(next,{opacity:1,clipPath:'inset(0% 0% 0% 0%)',scale:1,filter:'none'});
+  if(prev&&!instant&&!reduce){
+    gsap.set(next,{zIndex:2});gsap.set(prev,{zIndex:1});
+    gsap.fromTo(next,{clipPath:dir>0?'inset(0% 0% 0% 100%)':'inset(0% 100% 0% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:1.25,ease:'expo.inOut'});
+    gsap.to(prev,{scale:.94,filter:'blur(6px) brightness(.5)',duration:1.25,ease:'expo.inOut',onComplete:()=>{prev.classList.remove('on');gsap.set(prev,{clearProps:'all'});busy=false}});
+  }else{if(prev)prev.classList.remove('on');busy=false}
+  cur=n;
+  tl=build[next.id]();
+  Score.scene(next.id);
+  if(reduce||instant===2){tl.progress(1)}
+  document.getElementById('counter').textContent=String(n+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
+  gsap.to('#progress',{width:((n+1)/N*100)+'%',duration:1,ease:'power3.out'});
+  try{history.replaceState(null,'','#s'+(n+1))}catch(e){location.hash='s'+(n+1)}
+  setTimeout(()=>{document.getElementById('hint').style.opacity=0},6000);
+}
+function autoStart(){if(!userMuted&&!Score.on)Score.start()}
+function step(d){autoStart();
+  // first press while an entry animation is playing: finish it; second press: next slide
+  if(d>0&&tl&&tl.isActive()&&tl.progress()<.97){tl.progress(1);return}
+  go(cur+d);
+}
+addEventListener('keydown',e=>{
+  if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();step(1)}
+  else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();step(-1)}
+  else if(e.key==='m'||e.key==='M'){userMuted=Score.on;Score.toggle()}
+  else if(e.key==='Home')go(0);else if(e.key==='End')go(N-1);
+  else if(e.key==='f'||e.key==='F'){const el=document.documentElement;if(!document.fullscreenElement){el.requestFullscreen&&el.requestFullscreen().catch(()=>{})}else{document.exitFullscreen().catch(()=>{})}}
+});
+document.getElementById('snd').addEventListener('click',e=>{e.stopPropagation();userMuted=Score.on;Score.toggle()});
+document.querySelector('#nav .next').addEventListener('click',e=>{e.currentTarget.blur();step(1)});
+document.querySelector('#nav .prev').addEventListener('click',e=>{e.currentTarget.blur();step(-1)});
+let wheelLock=0;addEventListener('wheel',e=>{const now=Date.now();if(now-wheelLock<1100||Math.abs(e.deltaY)<20)return;wheelLock=now;step(e.deltaY>0?1:-1)},{passive:true});
+let tx=null;addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)step(dx<0?1:-1);tx=null},{passive:true});
+addEventListener('hashchange',()=>{const m=location.hash.match(/^#s(\d+)$/);if(m)go(+m[1]-1)});
+
+// review hook: deck.show(n) jumps to slide n with its animation finished
+window.deck={show:n=>{busy=false;cur=-1;slides.forEach(s=>s.classList.remove('on'));go(n-1,2)},at:(n,p)=>{busy=false;cur=-1;slides.forEach(s=>s.classList.remove('on'));go(n-1,true);tl.progress(p);loops.forEach(l=>l.pause())}};
+const m=location.hash.match(/^#s(\d+)$/);
+go(m?Math.min(N,+m[1])-1:0,true);
+})();
+</script>
+
+</html>
